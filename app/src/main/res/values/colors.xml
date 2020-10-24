@@ -3,4 +3,50 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <color name="fafafa"> #FAFAFA</color>
+
+    <color name="eaeaea"> #EAEAEA</color>
+    <color name="main_select_TextColor">#3062C8</color>
+    <color name="main_notSelect_TextColor">#000000</color>
+
+    <color name="color_333333">#333333</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_f7f7f7">#f7f7f7</color>
+    <color name="color_0BA4E9">#0BA4E9</color>
+
+    <color name="f2f2f2">#F2F2F2</color>
+
+    <color name="home_select_TextColor">#3A005A</color>
+
+    <color name="home_notSelect_TextColor">#9A9A9A</color>
+
+
+    <color name="find_select_TextColor">#FFFFFF</color>
+
+    <color name="find_notSelect_Color">#946AE4</color>
+
+    <color name="start">#8868E7</color>
+    <color name="end">#C476DA</color>
+
+
+    <color name="red">#FF0000</color>
+
+
+    <color name="one">#9c27b0</color>
+    <color name="two">#512da8</color>
+    <color name="three">#303f9f</color>
+    <color name="four">#00796b</color>
+    <color name="five">#c2185b</color>
+    <color name="six">#7b1fa2</color>
+    <color name="seven">#8bc34a</color>
+    <color name="eight">#afb42b</color>
+    <color name="nine">#fbc02d</color>
+    <color name="ten">#616161</color>
+    <color name="eleven">#5d4037</color>
+
 </resources>

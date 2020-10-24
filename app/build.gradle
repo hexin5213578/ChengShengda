@@ -4,6 +4,22 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    signingConfigs {
+        release {
+            storeFile file("chengshengda.jks")
+            storePassword "chengshengda"
+            keyAlias "key0"
+            keyPassword "chengshengda"
+        }
+        debug {
+            storeFile file("chengshengda.jks")
+            storePassword "chengshengda"
+            keyAlias "key0"
+            keyPassword "chengshengda"
+        }
+
+    }
+
     defaultConfig {
         applicationId "com.yidian.chengshengda"
         minSdkVersion 28
@@ -20,7 +36,13 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            debuggable true
+            minifyEnabled false  //不启用Proguard
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions{
@@ -31,6 +53,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     testImplementation 'junit:junit:4.12'
@@ -40,7 +63,7 @@ dependencies {
 
     // 引入multidex库
     implementation 'com.android.support:multidex:1.0.3'
-    //3D地图so及jar
+    //3D地图
     implementation 'com.amap.api:3dmap:latest.integration'
     //定位功能
     implementation 'com.amap.api:location:latest.integration'
@@ -97,5 +120,9 @@ dependencies {
 
     //微信
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+
+
+    //关联图片选择器模块
+    implementation project(':image_select')
 
 }
