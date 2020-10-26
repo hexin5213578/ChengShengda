@@ -1,6 +1,8 @@
 package com.yidian.chengshengda.utils;
 
+import com.yidian.chengshengda.details.bean.StationDetailsBean;
 import com.yidian.chengshengda.login.bean.LoginBean;
+import com.yidian.chengshengda.main.bean.AllStationBean;
 import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
 import com.yidian.chengshengda.regist.bean.RegistBean;
 
@@ -33,4 +35,17 @@ public interface Apis {
     //微信登录
     @GET("user/userLogin")
     Observable<LoginBean> doWechatLogin(@Query("accountType") int type,@Query("weChatOpenId")String wechatId,@Query("lng")double lng,@Query("lat")double lat);
+
+
+    //获取所有站点信息
+    @GET()
+    Observable<AllStationBean> getAllStation(@Url String url);
+
+
+    //根据ID查询站点详情
+    @GET()
+    Observable<StationDetailsBean> getStationDetails(@Url String url , @Query("stationNum") String num);
+
+    //
+
 }
