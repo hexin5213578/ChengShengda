@@ -83,10 +83,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:textSize="@dimen/sp_15"
+            android:textColor="#0BA4E9"
+            android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_15"
             android:text="取消"
-            android:visibility="gone"></TextView>
+            >
+        </TextView>
     </RelativeLayout>
 
     <com.amap.api.maps.MapView
@@ -98,7 +102,7 @@
     <RelativeLayout
         android:id="@+id/rl_dialog"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
+        android:layout_height="@dimen/dp_45"
         android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:background="@drawable/dialog_select_bg">
@@ -108,10 +112,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_6"
             android:text="清华园"
-            android:textColor="@color/color_333333"
-            android:textSize="@dimen/sp_14"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
             android:textStyle="bold"></TextView>
 
         <TextView
@@ -120,34 +124,34 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_name"
             android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_3"
             android:text="长虹大道南段奥术大师多"
-            android:textColor="@color/color_333333"
+            android:textColor="@color/white"
             android:textSize="@dimen/sp_12"></TextView>
 
         <Button
             android:id="@+id/bt_arrive"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_30"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="@dimen/dp_55"
+            android:layout_height="@dimen/dp_22"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/main_arrice_bt_bg"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:background="@drawable/main_cancle_bt_bg"
             android:text="路线"
             android:textColor="@color/white"></Button>
 
         <Button
             android:id="@+id/bt_cancle"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_30"
+            android:layout_width="@dimen/dp_55"
+            android:layout_height="@dimen/dp_22"
             android:layout_toLeftOf="@id/bt_arrive"
-            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginBottom="@dimen/dp_5"
             android:background="@drawable/main_cancle_bt_bg"
             android:text="取消"
-            android:textColor="@color/black"></Button>
+            android:textColor="@color/white"></Button>
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -161,7 +165,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
     </androidx.core.widget.NestedScrollView>
 
 

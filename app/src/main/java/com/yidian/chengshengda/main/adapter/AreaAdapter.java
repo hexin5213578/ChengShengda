@@ -10,19 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yidian.chengshengda.R;
+import com.yidian.chengshengda.main.bean.SaveAreaBean;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class NoPoiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AreaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final List<String> list;
 
 
-    public NoPoiAdapter(Context context, List<String> list) {
+
+    public AreaAdapter(Context context, List<String> list) {
 
         this.context = context;
         this.list = list;
@@ -31,18 +34,19 @@ public class NoPoiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context, R.layout.item_nopoi, null);
+        View view = View.inflate(context, R.layout.item_area, null);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        String name = list.get(position);
-        ((ViewHolder)holder).tvName.setText(name);
-        ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
+        ((ViewHolder) holder).tvArea.setText(list.get(position));
+        ((ViewHolder) holder).rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(name);
+                SaveAreaBean saveAreaBean = new SaveAreaBean();
+                saveAreaBean.setArea(list.get(position));
+                EventBus.getDefault().post(saveAreaBean);
             }
         });
     }
@@ -53,14 +57,13 @@ public class NoPoiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tv_name)
-        TextView tvName;
-        @BindView(R.id.ll_location)
-        RelativeLayout llLocation;
-        @BindView(R.id.rl_item2)
-        RelativeLayout rlItem;
+        @BindView(R.id.tv_area)
+        TextView tvArea;
+        @BindView(R.id.rl)
+        RelativeLayout rl;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

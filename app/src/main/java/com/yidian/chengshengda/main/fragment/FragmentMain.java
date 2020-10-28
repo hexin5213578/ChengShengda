@@ -1,10 +1,12 @@
 package com.yidian.chengshengda.main.fragment;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +50,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.NaviPara;
+import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.district.DistrictItem;
@@ -63,10 +67,12 @@ import com.amap.api.services.weather.WeatherSearchQuery;
 import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.details.SiteDeletails;
-import com.yidian.chengshengda.main.adapter.NoPoiAdapter;
+import com.yidian.chengshengda.main.activity.SeleteAreaActivity;
 import com.yidian.chengshengda.main.adapter.PoiAdapter;
 import com.yidian.chengshengda.main.bean.AllStationBean;
+import com.yidian.chengshengda.main.bean.SaveAreaBean;
 import com.yidian.chengshengda.main.bean.SendLocationBean;
+import com.yidian.chengshengda.regist.activity.RegistActivity;
 import com.yidian.chengshengda.utils.KeyBoardUtils;
 import com.yidian.chengshengda.utils.NetUtils;
 import com.yidian.chengshengda.utils.StringUtil;
@@ -85,6 +91,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+
+//首页
 public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictSearchListener, LocationSource, AMapLocationListener, WeatherSearch.OnWeatherSearchListener, View.OnClickListener, PoiSearch.OnPoiSearchListener {
     @BindView(R.id.map)
     MapView map;
@@ -126,10 +134,6 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
     //初始化定位
     AMapLocationClient mlocationClient;
     AMapLocationClientOption mLocationOption;
-
-    String[] str = {"渝中区", "万州区", "涪陵区", "大渡口区", "江北区", "沙坪坝区", "九龙坡区", "南岸区", "北碚区", "綦江区", "大足区",
-            "渝北区", "巴南区", "黔江区", "长寿区", "江津区", "合川区", "永川区", "南川区", "璧山区", "铜梁区", "潼南区", "荣昌区", "开州区", "梁平区", "武隆区"
-            , "城口县", "丰都县", "垫江县", "忠县", "云阳县", "奉节县", "巫山县", "巫溪县", "石柱土家族自治县", "秀山土家族苗族自治县", "酉阳土家族苗族自治县", "彭水苗族土家族自治县"};
     private double latitude;
     private double longitude;
     //天气查询
@@ -139,6 +143,9 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
     private PoiSearch poiSearch;
     private String city;
     private PoiAdapter poiAdapter;
+    private String district;
+    private PolygonOptions polygonOptions;
+    private Polygon polygon;
 
     @Nullable
     @Override
@@ -150,13 +157,16 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         //设置状态栏字体黑色
         StatusBarUtil.setDarkMode(getActivity());
 
+        //权限
+        Request();
         map.onCreate(savedInstanceState);
         if (aMap == null) {
             aMap = map.getMap();
         }
 
         UiSettings uiSettings =  aMap.getUiSettings();
-        uiSettings.setLogoBottomMargin(-50);
+        uiSettings.setLogoBottomMargin(-100);
+
 
         tvCancle.setOnClickListener(this);
         llLocation.setOnClickListener(this);
@@ -214,6 +224,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);
 
+        //定位点
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.my_location);
         myLocationStyle.myLocationIcon(bitmapDescriptor);
         myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
@@ -255,7 +266,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         });
 
         //获取所有站点信息
-        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.107:8081/station/selStation")
+        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.115:8081/station/selStation")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AllStationBean>() {
@@ -359,6 +370,8 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             // 在定位结束后，在合适的生命周期调用onDestroy()方法
             // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
             mlocationClient.startLocation();//启动定位
+
+
         }
     }
 
@@ -408,18 +421,17 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         //画点
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
-                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.sall)));
+                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.biaoji)));
         Marker marker = aMap.addMarker(markerOptions);
         marker.setClickable(false);
         btcancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //关闭弹出框
+                //关闭
                 rlDialog.setVisibility(View.GONE);
                 marker.destroy();
                 //缩放到我的位置
                 aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(latitude,longitude), 16, 0, 0)));
-
             }
         });
         //导航
@@ -445,13 +457,6 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         });
     }
 
-    //获取到拿到的字符串给 输入框赋值
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getStr(String str) {
-        if (!TextUtils.isEmpty(str)) {
-            etSearch.setText(str);
-        }
-    }
     /**
      * 判断高德地图app是否已经安装
      */
@@ -484,7 +489,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
 
                 city = aMapLocation.getCity();
 
-                String district = aMapLocation.getDistrict();
+                district = aMapLocation.getDistrict();
                 tvCity.setText(district);
 
                 //检索参数为城市和天气类型，实况天气为WEATHER_TYPE_LIVE、天气预报为WEATHER_TYPE_FORECAST
@@ -523,10 +528,11 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         super.onResume();
         //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
         map.onResume();
-        mlocationClient.startLocation();
+        // 声明 多边形参数对象
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        Log.e("xxx","onResume()");
     }
 
     @Override
@@ -535,6 +541,8 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
         map.onPause();
         mlocationClient.stopLocation();
+        Log.e("xxx","onPause()");
+
     }
 
     @Override
@@ -542,6 +550,8 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         super.onSaveInstanceState(outState);
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
         map.onSaveInstanceState(outState);
+        Log.e("xxx","onSaveInstanceState");
+
     }
 
     //获取边界坐标
@@ -568,8 +578,8 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                 }
                 Log.e("xxx", "当前区共有" + split.length + "个坐标");
 
-                // 声明 多边形参数对象
-                PolygonOptions polygonOptions = new PolygonOptions();
+                polygonOptions = new PolygonOptions();
+
                 // 添加 多边形的每个顶点（顺序添加）
                 for (int j = 0; j < split.length; j++) {
                     String[] split1 = split[j].split(",");
@@ -577,24 +587,23 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                     polygonOptions.add(latLng);
                     //Log.e("xxx",Double.valueOf(split[0])+"   "+Double.valueOf(split[1]));
                 }
-
-
                 //查询结束后跳转到指定区域
-                String s = split[0];
+                String s = split[split.length/2];
                 String[] location = s.split(",");
                 //地圖縮放
-                aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(Double.valueOf(location[1]), Double.valueOf(location[0])), 8, 0, 0)));
+                aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(Double.valueOf(location[1]), Double.valueOf(location[0])), 9, 0, 0)));
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         polygonOptions // 多边形的边框
                                 .fillColor(Color.argb(60, r, g, b)).
                                 strokeColor(Color.argb(0, 11, 164, 233));   // 多边形的填充色
-                        aMap.addPolygon(polygonOptions);
+                        polygon = aMap.addPolygon(polygonOptions);
                     }
                 });
             }
         }).start();
+        polygon.remove();
     }
     //天气回调
     @Override
@@ -635,8 +644,9 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                 break;
             case R.id.ll_location:
                 //跳转到选择定位点
-
-
+                Intent intent = new Intent(getContext(), SeleteAreaActivity.class);
+                intent.putExtra("area",district);
+                startActivity(intent);
 
                 break;
             case R.id.tv_cancle:
@@ -649,6 +659,16 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                 tvCancle.setVisibility(View.GONE);
                 rcNest.setVisibility(View.GONE);
                 break;
+        }
+    }
+    //选择地区回调
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getArea(SaveAreaBean saveAreaBean){
+        String area = saveAreaBean.getArea();
+        if(!TextUtils.isEmpty(area)){
+
+            getPoi(area);
+            Toast.makeText(getActivity(), ""+area, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -666,12 +686,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                 rcSearch.setAdapter(poiAdapter);
             } else {
                 //如果查询失败 关键词不匹配 设置推荐关键字
-                List<String> searchSuggestionKeywords = poiResult.getSearchSuggestionKeywords();
-                Log.e("xxx", "失败推荐长度为" + searchSuggestionKeywords.size() + "");
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-                rcSearch.setLayoutManager(linearLayoutManager);
-                NoPoiAdapter noPoiAdapter = new NoPoiAdapter(getContext(), searchSuggestionKeywords);
-                rcSearch.setAdapter(noPoiAdapter);
+                Toast.makeText(getContext(), "关键字有误", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -679,5 +694,20 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int i) {
 
+    }
+    //安卓10.0定位权限
+    public void Request() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int request = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+            if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
+            {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                return;//
+            } else {
+
+            }
+        } else {
+
+        }
     }
 }

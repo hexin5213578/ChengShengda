@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -36,15 +35,12 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
-import com.yidian.chengshengda.base.App;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.changepwd.ChangePwdActivity;
 import com.yidian.chengshengda.login.activity.LoginActivity;
-import com.yidian.chengshengda.setpwd.SetPwdActivity;
 import com.yidian.chengshengda.utils.DataCleanManager;
 import com.yidian.chengshengda.utils.SPUtil;
-import com.yidian.chengshengda.utils.StringUtil;
 
 import org.lym.image.select.PictureSelector;
 
@@ -54,8 +50,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SetupActivity extends BaseAvtivity implements View.OnClickListener {
-    @BindView(R.id.back)
-    ImageView back;
     @BindView(R.id.iv_headimg)
     ImageView ivHeadimg;
     @BindView(R.id.rl_img)
@@ -80,6 +74,10 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
     TextView tvCancle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.back)
+    ImageView back;
+    @BindView(R.id.title)
+    TextView title;
     private String path;
     private PopupWindow mPopupWindow;
 
@@ -102,7 +100,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         rlBanben.setOnClickListener(this);
         tvZhuxiao.setOnClickListener(this);
         tvCancle.setOnClickListener(this);
-
+        title.setText("设置");
         //申请开启内存卡权限
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && (this.checkSelfPermission
                 (Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
@@ -122,7 +120,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("", e.getMessage());
         }
-        tvBanben.setText(appVersionName+"");
+        tvBanben.setText(appVersionName + "");
 
         //获取缓存
         String totalCacheSize = DataCleanManager.getTotalCacheSize(this);
@@ -138,16 +136,13 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-                //返回
+        switch (v.getId()) {
+            //返回
             case R.id.back:
-
                 finish();
                 break;
-                //更换头像
+            //更换头像
             case R.id.rl_img:
-
-
                 PictureSelector
                         .with(this)
                         .selectSpec()
@@ -160,29 +155,29 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                         .setAuthority("com.yidian.chengshengda.utils.MyFileProvider")
                         .startForResult(100);
                 break;
-                //更改昵称
+            //更改昵称
             case R.id.rl_name:
+                //展示更换昵称的弹出框
                 showSelect();
                 break;
-                //跳转修改密码页
+            //跳转修改密码页
             case R.id.rl_set_pwd:
                 startActivity(new Intent(this, ChangePwdActivity.class));
                 break;
-                //清除缓存
+            //清除缓存
             case R.id.rl_clean:
+                //展示清除缓存的弹出框
                 showSelect1();
-
-
                 break;
-                //查看版本
+            //查看版本
             case R.id.rl_banben:
                 // TODO: 2020/10/21 0021 跳转到版本页
                 break;
-                //注销账号
+            //注销账号
             case R.id.tv_zhuxiao:
-
+                // TODO: 2020/10/28 0028 调用注销账号接口
                 break;
-                //退出登录
+            //退出登录
             case R.id.tv_cancle:
                 //清除登录信息 返回登录页
                 SPUtil.getInstance().saveData(SetupActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN, "1");
@@ -191,6 +186,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                 break;
         }
     }
+
     //图片回调
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -201,16 +197,19 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                 List<String> paths = PictureSelector.obtainPathResult(data);
                 path = paths.get(0);
                 Glide.with(this).load(path).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+
+                // TODO: 2020/10/28 0028 上传到服务器
             }
         }
     }
+
     // 弹出选择规格
     public void showSelect() {
         //创建popwiondow弹出框
         mPopupWindow = new PopupWindow();
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_changename,null);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_changename, null);
         EditText et_name = view.findViewById(R.id.et_name);
         TextView tv_rem = view.findViewById(R.id.tv_Rem);
 
@@ -220,7 +219,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
         //文本输入前 获取长度赋值给长度计算
         int length = et_name.getText().length();
-        tv_rem.setText(length+"/10");
+        tv_rem.setText(length + "/10");
         //输入框监听器
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -237,14 +236,14 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             public void afterTextChanged(Editable s) {
                 //文本输入结束后 获取长度赋值给长度计算
                 int length = et_name.getText().length();
-                tv_rem.setText(length+"/10");
+                tv_rem.setText(length + "/10");
             }
         });
         //取消
         view.findViewById(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              dismiss();
+                dismiss();
             }
         });
         view.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
@@ -252,9 +251,11 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             public void onClick(View v) {
                 //获取输入框文本  判空发起更换昵称的网络请求  请求成功关闭弹出框
                 String s = et_name.getText().toString();
-                if(!TextUtils.isEmpty(s)){
-                    
-                }else{
+                if (!TextUtils.isEmpty(s)) {
+                    // TODO: 2020/10/28 0028 上传到服务器
+
+
+                } else {
                     Toast.makeText(SetupActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -280,7 +281,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         mPopupWindow = new PopupWindow();
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_cleanmanager,null);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_cleanmanager, null);
 
         //取消
         view.findViewById(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
@@ -294,8 +295,10 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             public void onClick(View v) {
                 //清除缓存
                 DataCleanManager.clearAllCache(SetupActivity.this);
+
                 //重新获取缓存
-                tvHuancun.setText("");
+                String totalCacheSize = DataCleanManager.getTotalCacheSize(SetupActivity.this);
+                tvHuancun.setText(totalCacheSize);
                 dismiss();
             }
         });
@@ -316,7 +319,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
     // 设置透明度
     public void setWindowAlpa(boolean isopen) {
-        if (android.os.Build.VERSION.SDK_INT < 11) {
+        if (Build.VERSION.SDK_INT < 11) {
             return;
         }
         final Window window = this.getWindow();
@@ -361,4 +364,5 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             mPopupWindow.dismiss();
         }
     }
+
 }

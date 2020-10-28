@@ -76,7 +76,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="tencent101906973" />
+                <data android:scheme="tencent101913220" />
             </intent-filter>
         </activity>
         <activity
@@ -151,7 +151,6 @@
         <activity
             android:name=".details.SiteDeletails"
             android:screenOrientation="portrait">
-
         </activity>
     </application>
 

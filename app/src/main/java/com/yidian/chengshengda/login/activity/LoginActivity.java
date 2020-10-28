@@ -145,7 +145,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener,
 
 
         //腾讯AppId(替换你自己App Id)、上下文
-        mTencent = Tencent.createInstance("101906973", this);
+        mTencent = Tencent.createInstance("101913220", this);
 
         //开启权限
         Request();

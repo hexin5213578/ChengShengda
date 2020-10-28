@@ -6,6 +6,9 @@ import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseFragment;
 import com.yidian.chengshengda.base.BasePresenter;
 
+
+//未售出
+
 public class FragmentNoSell extends BaseFragment {
     @Override
     protected void getid(View view) {
