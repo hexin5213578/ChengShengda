@@ -1,7 +1,6 @@
 package com.yidian.chengshengda.details.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -12,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.yidian.chengshengda.R;
-import com.yidian.chengshengda.details.SiteDeletails;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
-import com.yidian.chengshengda.image.CustomRoundAngleImageView;
-import com.yidian.chengshengda.main.fragment.adv.adapter.SellSitesAdapter;
-import com.yidian.chengshengda.main.fragment.adv.bean.SitesBean;
+import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 
 import java.util.List;
 

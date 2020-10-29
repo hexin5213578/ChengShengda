@@ -2,7 +2,6 @@ package com.yidian.chengshengda.main.fragment.adv.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -12,14 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.district.DistrictSearch;
 import com.amap.api.services.route.DistanceItem;
 import com.amap.api.services.route.DistanceResult;
 import com.amap.api.services.route.DistanceSearch;
 import com.bumptech.glide.Glide;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.details.SiteDeletails;
-import com.yidian.chengshengda.image.CustomRoundAngleImageView;
+import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.main.fragment.adv.bean.NosellSiteBean;
 import com.yidian.chengshengda.utils.SPUtil;
 import com.yidian.chengshengda.utils.StringUtil;
@@ -107,14 +105,15 @@ public class NoSellSitesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else {
             String[] split = stationImg.split(",");
 
-            Glide.with(context).load(split[0]).into(((SellSitesAdapter.ViewHolder)holder).ivImg);
+            Glide.with(context).load(split[0]).into(((ViewHolder)holder).ivImg);
         }
 
         ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String stationNum = listBean.getStationNum();
                 Intent intent = new Intent(context, SiteDeletails.class);
-                intent.putExtra("id", listBean.getStationNum());
+                intent.putExtra("id", stationNum);
                 context.startActivity(intent);
             }
         });

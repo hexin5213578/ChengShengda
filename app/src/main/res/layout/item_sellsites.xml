@@ -11,7 +11,7 @@
         android:layout_marginRight="@dimen/dp_15"
         android:background="@drawable/item_sell_bg"
         android:layout_height="@dimen/dp_83">
-        <com.yidian.chengshengda.image.CustomRoundAngleImageView
+        <com.yidian.chengshengda.custom.CustomRoundAngleImageView
             android:layout_width="@dimen/dp_63"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_12"
@@ -23,7 +23,7 @@
             roundiv:left_bottom_radius="@dimen/dp_5"
             android:src="@mipmap/headimg"
             android:layout_height="@dimen/dp_63">
-        </com.yidian.chengshengda.image.CustomRoundAngleImageView>
+        </com.yidian.chengshengda.custom.CustomRoundAngleImageView>
         <TextView
             android:layout_width="wrap_content"
             android:text="广告点位置"

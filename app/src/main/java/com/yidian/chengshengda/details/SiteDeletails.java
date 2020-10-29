@@ -1,13 +1,26 @@
 package com.yidian.chengshengda.details;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +33,7 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.details.adapter.HisLeaseAdapter;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
 import com.yidian.chengshengda.utils.NetUtils;
@@ -63,6 +77,15 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
     private List<String> imgList;
     private String[] split;
     private ImageLoader loader;
+    private int status;
+    int flag ;
+    private PopupWindow mPopupWindow;
+    private String place;
+    private int money;
+    private String stationImg;
+    private int progress;
+    private int progress1;
+    int a =1;
 
     @Override
     protected int getResId() {
@@ -84,6 +107,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 getIntent();
         String id = intent.getStringExtra("id");
         //获取对应id下的站点详情
+        showDialog();
         NetUtils.getInstance().getApis()
                 .getStationDetails("http://192.168.10.111:8081/station/selectStation",id)
                 .subscribeOn(Schedulers.io())
@@ -96,6 +120,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     @SuppressLint("ResourceAsColor")
                     @Override
                     public void onNext(StationDetailsBean stationDetailsBean) {
+                        hideDialog();
                         String type = stationDetailsBean.getType();
                         List<StationDetailsBean.ObjectBean.StationsBean> stations = stationDetailsBean.getObject().getStations();
 
@@ -103,18 +128,19 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                             if(stations.size()>0 && stations!=null){
                                 StationDetailsBean.ObjectBean.StationsBean stationsBean = stations.get(0);
 
-                                String place = stationsBean.getPlace();
-                                int money = stationsBean.getStationMoney();
-                                int status = stationsBean.getStatus();
-                                String stationImg = stationsBean.getStationImg();
+                                place = stationsBean.getPlace();
+                                money = stationsBean.getStationMoney();
+                                status = stationsBean.getStatus();
+                                stationImg = stationsBean.getStationImg();
 
-
-                                tvPrice.setText(money+"/月");
+                                tvPrice.setText(money +"/月");
                                 tvAddress.setText(place);
-                                if(stationImg==null){
+                                if(stationImg ==null){
                                     //如果图片为空
                                     List<Integer> imgList1 = new ArrayList<>();
                                     imgList1.add(R.mipmap.welcome);
+                                    imgList1.add(R.mipmap.welcome);
+                                    imgList1.add(R.mipmap.location);
                                     //xbn设置
                                     xbn.setIndicatorGravity(BannerConfig.CENTER);
                                     xbn.setImageLoader(loader);
@@ -146,11 +172,11 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                 }
 
                                 //判断当前状态
-                                if(status==1){
+                                if(status ==1){
                                     tvIssall.setTextColor(getResources().getColor(R.color.color_0BA4E9));
                                     tvIssall.setText("未租出");
                                     tvIssall.setBackground(getResources().getDrawable(R.drawable.details_bg));
-                                }else if(status==2){
+                                }else if(status ==2){
                                     tvIssall.setTextColor(getResources().getColor(R.color.red_an));
                                     tvIssall.setText("已租出");
                                     tvIssall.setBackground(getResources().getDrawable(R.drawable.details_bg_sell));
@@ -178,7 +204,8 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
                     @Override
                     public void onError(Throwable e) {
-
+                        hideDialog();
+                        Toast.makeText(SiteDeletails.this, "请求失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -209,10 +236,23 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 //加入购物车
             case R.id.tv_add_shopcar:
                 // TODO: 2020/10/26 0026 选择规格
+                //判断是否已出租
+                if(status==2){
+                    //给标记赋值
+                    flag = 1;
+                    showSelect();
+                }else{
+                    Toast.makeText(this, "站点已出租", Toast.LENGTH_SHORT).show();
+                }
                 break;
-                //提交
             case R.id.tv_commit:
-
+                if(status==2){
+                    //给标记赋值
+                    flag = 2;
+                    showSelect();
+                }else{
+                    Toast.makeText(this, "站点已出租", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -224,8 +264,180 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
             Glide.with(context.getApplicationContext())
-                    .load((String) path)
+                    .load(path)
                     .into(imageView);
+        }
+    }
+    //重新进入时隐藏弹出框
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        dismiss();
+    }
+
+    //弹出选择规格
+    public void showSelect() {
+        //创建popwiondow弹出框
+        mPopupWindow = new PopupWindow();
+        mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        View view = LayoutInflater.from(this).inflate(R.layout.dailog_select_spec,null);
+
+        CustomRoundAngleImageView img = view.findViewById(R.id.iv_img);
+        TextView tv_distance = view.findViewById(R.id.tv_sites_distance);
+        TextView tv_price = view.findViewById(R.id.tv_price);
+
+        TextView tv_yearcount = view.findViewById(R.id.tv_year_count);
+        TextView tv_monthcount = view.findViewById(R.id.tv_month_count);
+        TextView tv_year_title = view.findViewById(R.id.tv_year_title);
+        ImageView iv_cancle = view.findViewById(R.id.iv_cancle);
+        SeekBar pro_month = view.findViewById(R.id.pro_month);
+        SeekBar pro_year = view.findViewById(R.id.pro_year);
+        TextView tv_month = view.findViewById(R.id.tv_month);
+        TextView tv_year = view.findViewById(R.id.tv_year);
+        TextView tv_money = view.findViewById(R.id.tv_money);
+        Button bt_confirm = view.findViewById(R.id.bt_confirm);
+
+        if(stationImg ==null){
+            //如果图片为空
+            Glide.with(this).load(R.mipmap.headimg).into(img);
+        }else{
+
+            split = stationImg.split(",");
+            if(split.length>0 && split!=null){
+                Glide.with(this).load(split[0]).into(img);
+            }
+        }
+        tv_distance.setText(place);
+        tv_price.setText("￥"+money+"");
+        iv_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        tv_money.setText(money+"元");
+        pro_month.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+
+            /**
+             * 拖动条进度改变的时候调用
+             */
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tv_month.setText((progress+1)+"月");
+                //计算总价
+                tv_monthcount.setText(progress+1+"");
+            }
+            /**
+             * 拖动条开始拖动的时候调用
+             */
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            /**
+             * 拖动条停止拖动的时候调用
+             */
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        pro_year.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tv_year.setText((progress)+"年");
+                if(progress==0){
+                    tv_year_title.setVisibility(View.GONE);
+                    tv_yearcount.setVisibility(View.GONE);
+                }else{
+                    tv_year_title.setVisibility(View.VISIBLE);
+                    tv_yearcount.setVisibility(View.VISIBLE);
+                    tv_yearcount.setText(progress+"");
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+     /*   if(b<12){
+            tv_yixuan.setText("已选"+a+"月");
+            tv_money.setText(a*money+"元");
+        }else{
+            tv_yixuan.setText("已选"+ b +"月");
+            tv_money.setText(b *money+"元");
+        }*/
+
+
+        //popwindow设置属性
+        mPopupWindow.setAnimationStyle(R.style.popwindow_anim_style);
+        mPopupWindow.setContentView(view);
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                setWindowAlpa(false);
+            }
+        });
+        show(view);
+    }
+
+    //设置透明度
+    public void setWindowAlpa(boolean isopen) {
+        if (android.os.Build.VERSION.SDK_INT < 11) {
+            return;
+        }
+        final Window window = this.getWindow();
+        final WindowManager.LayoutParams lp = window.getAttributes();
+        window.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        ValueAnimator animator;
+        if (isopen) {
+            animator = ValueAnimator.ofFloat(1.0f, 0.5f);
+        } else {
+            animator = ValueAnimator.ofFloat(0.5f, 1.0f);
+        }
+        animator.setDuration(400);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                lp.alpha = alpha;
+                window.setAttributes(lp);
+            }
+        });
+        animator.start();
+    }
+
+    /**
+     * 显示PopupWindow
+     */
+    private void show(View v) {
+        if (mPopupWindow != null && !mPopupWindow.isShowing()) {
+            mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+        }
+        setWindowAlpa(true);
+
+    }
+
+    /**
+     * 消失PopupWindow
+     */
+    public void dismiss() {
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
+            mPopupWindow.dismiss();
         }
     }
 }

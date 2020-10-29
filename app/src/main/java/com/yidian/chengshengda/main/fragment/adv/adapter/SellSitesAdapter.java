@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.details.SiteDeletails;
-import com.yidian.chengshengda.image.CustomRoundAngleImageView;
+import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.main.fragment.adv.bean.SitesBean;
 
 import java.util.List;
@@ -62,8 +61,9 @@ public class SellSitesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String stationNum = String.valueOf(objectBean.getStationNum());
                 Intent intent = new Intent(context, SiteDeletails.class);
-                intent.putExtra("id",objectBean.getStationNum());
+                intent.putExtra("id",stationNum);
                 context.startActivity(intent);
             }
         });

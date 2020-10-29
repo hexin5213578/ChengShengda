@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.yidian.chengshengda.R;
+import com.yidian.chengshengda.custom.Loading_view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,9 +28,9 @@ import butterknife.Unbinder;
 public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements BaseView {
     private P presenter;
     private Unbinder bind;
-    Dialog mLoadingDialog;
     public boolean mViewInflateFinished;
     private View view;
+    private Loading_view loading_view;
 
     @Nullable
     @Override
@@ -45,26 +47,19 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         super.onViewCreated(view, savedInstanceState);
         getData();
     }
-   /* public void showDialog() {
-        if (mLoadingDialog == null) {
-            mLoadingDialog = new Dialog(getActivity());
-            mLoadingDialog.setCancelable(false);
-            View v = View.inflate(getContext(), R.layout.dialog_loading, null);
-            ImageView iv = v.findViewById(R.id.iv_loading);
-            Glide.with(App.getContext()).asGif().load(R.mipmap.ic_launcher).into(iv);
-
-            mLoadingDialog.addContentView(v,
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
+    // 展示loading圈
+    public void showDialog() {
+        if(loading_view==null){
+            loading_view = new Loading_view(getContext(), R.style.CustomDialog);
         }
-        mLoadingDialog.show();
-
+        loading_view.show();
     }
+    //  隐藏loading圈
     public void hideDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
+        if (loading_view != null && loading_view.isShowing()) {
+            loading_view.dismiss();
         }
-    }*/
+    }
 
     public P getPresenter() {
         return presenter;

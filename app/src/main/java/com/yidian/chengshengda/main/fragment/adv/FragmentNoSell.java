@@ -2,6 +2,7 @@ package com.yidian.chengshengda.main.fragment.adv;
 
 import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +63,8 @@ public class FragmentNoSell extends BaseFragment {
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                getSites(1,20);
+                page=1;
+                getSites(page,20);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -89,6 +91,7 @@ public class FragmentNoSell extends BaseFragment {
         });
     }
     public void getSites(int page,int pageSize){
+        showDialog();
         NetUtils.getInstance().getApis()
                 .getNosellSite("http://192.168.10.111:8081/station/selectStationStatus",1,page,pageSize)
                 .subscribeOn(Schedulers.io())
@@ -101,6 +104,7 @@ public class FragmentNoSell extends BaseFragment {
 
                     @Override
                     public void onNext(NosellSiteBean sitesBean) {
+                        hideDialog();
                         String type = sitesBean.getType();
                         List<NosellSiteBean.ObjectBean.ListBean> list = sitesBean.getObject().getList();
 
@@ -117,7 +121,8 @@ public class FragmentNoSell extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        hideDialog();
+                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

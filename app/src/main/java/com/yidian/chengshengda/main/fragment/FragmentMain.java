@@ -66,6 +66,7 @@ import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
+import com.yidian.chengshengda.custom.Loading_view;
 import com.yidian.chengshengda.details.SiteDeletails;
 import com.yidian.chengshengda.main.activity.SeleteAreaActivity;
 import com.yidian.chengshengda.main.adapter.PoiAdapter;
@@ -147,6 +148,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
     private String district;
     private PolygonOptions polygonOptions;
     private Polygon polygon;
+    private Loading_view loading_view;
 
     @Nullable
     @Override
@@ -266,6 +268,10 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             }
         });
 
+        if(loading_view==null){
+            loading_view = new Loading_view(getContext(), R.style.CustomDialog);
+        }
+        loading_view.show();
         //获取所有站点信息
         NetUtils.getInstance().getApis().getAllStation("http://192.168.10.111:8081/station/selStation")
                 .subscribeOn(Schedulers.io())
@@ -278,6 +284,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
 
                     @Override
                     public void onNext(AllStationBean allStationBean) {
+                        loading_view.dismiss();
                         if(allStationBean.getType().equals("OK")){
                             List<AllStationBean.ObjectBean> object = allStationBean.getObject();
                             if(object.size()>0 && object!=null){
@@ -291,7 +298,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
 
                     @Override
                     public void onError(Throwable e) {
-
+                        loading_view.dismiss();
                     }
 
                     @Override

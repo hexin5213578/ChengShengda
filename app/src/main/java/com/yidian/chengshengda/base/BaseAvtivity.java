@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.yidian.chengshengda.R;
+import com.yidian.chengshengda.custom.Loading_view;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -37,7 +38,7 @@ import butterknife.Unbinder;
 public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatActivity implements BaseView  {
     private P presenter;
     private Unbinder bind;
-    Dialog mLoadingDialog;
+    private Loading_view loading_view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,28 +52,19 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         getData();
     }
 
-   /* // 展示loading圈
+    // 展示loading圈
     public void showDialog() {
-        if (mLoadingDialog == null) {
-            mLoadingDialog = new Dialog(this);
-            mLoadingDialog.setCancelable(false);
-            View v = View.inflate(this, R.layout.dialog_loading, null);
-            ImageView iv = v.findViewById(R.id.iv_loading);
-            Glide.with(this).asGif().load(R.mipmap.ic_launcher).into(iv);
-
-            mLoadingDialog.addContentView(v,
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        if(loading_view==null){
+            loading_view = new Loading_view(this, R.style.CustomDialog);
         }
-
-        mLoadingDialog.show();
+        loading_view.show();
     }
     //  隐藏loading圈
     public void hideDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
+        if (loading_view != null && loading_view.isShowing()) {
+            loading_view.dismiss();
         }
-    }*/
+    }
 
     public P getPresenter() {
         return presenter;

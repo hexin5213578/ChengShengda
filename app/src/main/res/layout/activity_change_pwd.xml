@@ -160,19 +160,5 @@
             android:textColor="@color/white"
             android:layout_height="@dimen/dp_40">
         </Button>
-        <SeekBar
-            android:layout_below="@id/bt_confirm"
-            android:progress="10"
-            android:max="12"
-            android:thumb="@mipmap/seekbar_thume"
-            android:maxHeight="@dimen/dp_5"
-            android:minHeight="@dimen/dp_5"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:splitTrack="false"
-            android:progressDrawable="@drawable/progress_bar_bg"
-            android:layout_marginTop="@dimen/dp_30"
-            android:layout_width="@dimen/dp_300"
-            android:layout_height="@dimen/dp_25">
-        </SeekBar>
     </RelativeLayout>
 </RelativeLayout>
