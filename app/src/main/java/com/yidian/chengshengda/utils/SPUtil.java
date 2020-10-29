@@ -40,6 +40,8 @@ public class SPUtil {
     public static final String USER_NAME = "username";
     public static final String USER_ID = "user_id";
 
+    public static final String Lat = "lat";
+    public static final String lng = "lng";
 
 
     private SPUtil() {
@@ -59,7 +61,6 @@ public class SPUtil {
         edit.putString(key, value);
         edit.commit();
     }
-
     //存储信息
     @SuppressLint("CommitPrefEdits")
     public void saveDataOffloat(Context context, String fileName, String key, float value){

@@ -132,7 +132,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:id="@+id/rc_history"
-                    android:visibility="gone"
+                    android:visibility="visible"
+                    android:layout_marginBottom="@dimen/dp_40"
                     android:layout_marginRight="@dimen/dp_15"
                     android:layout_height="wrap_content">
                 </androidx.recyclerview.widget.RecyclerView>
@@ -140,6 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:id="@+id/rl_noHistory"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/dp_15"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_height="@dimen/dp_280">

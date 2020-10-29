@@ -75,6 +75,7 @@ import com.yidian.chengshengda.main.bean.SendLocationBean;
 import com.yidian.chengshengda.regist.activity.RegistActivity;
 import com.yidian.chengshengda.utils.KeyBoardUtils;
 import com.yidian.chengshengda.utils.NetUtils;
+import com.yidian.chengshengda.utils.SPUtil;
 import com.yidian.chengshengda.utils.StringUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -266,7 +267,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         });
 
         //获取所有站点信息
-        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.115:8081/station/selStation")
+        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.111:8081/station/selStation")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AllStationBean>() {
@@ -501,6 +502,9 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
 
 
                 Log.e("xxx", "当前经纬度为" + latitude + "  " + longitude + "");
+                SPUtil.getInstance().saveData(getContext(),SPUtil.FILE_NAME,SPUtil.Lat,String.valueOf(latitude));
+                SPUtil.getInstance().saveData(getContext(),SPUtil.FILE_NAME,SPUtil.lng,String.valueOf(longitude));
+
                 //地圖縮放
                 aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15, 0, 0)));
 

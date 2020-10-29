@@ -306,6 +306,14 @@ public class StringUtil {
         return decimal.toString();
     }
 
+    public static String round1(String value) {
+        int scale = 1;
+        int roundingMode = BigDecimal.ROUND_HALF_EVEN;
+        BigDecimal decimal = new BigDecimal(value);
+        decimal = decimal.setScale(scale, roundingMode);
+        return decimal.toString();
+    }
+
     /**
      * 正则判断密码特殊字符
      *

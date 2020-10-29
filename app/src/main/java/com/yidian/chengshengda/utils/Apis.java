@@ -3,6 +3,8 @@ package com.yidian.chengshengda.utils;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
 import com.yidian.chengshengda.login.bean.LoginBean;
 import com.yidian.chengshengda.main.bean.AllStationBean;
+import com.yidian.chengshengda.main.fragment.adv.bean.NosellSiteBean;
+import com.yidian.chengshengda.main.fragment.adv.bean.SitesBean;
 import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
 import com.yidian.chengshengda.regist.bean.RegistBean;
 
@@ -46,6 +48,13 @@ public interface Apis {
     @GET()
     Observable<StationDetailsBean> getStationDetails(@Url String url , @Query("stationNum") String num);
 
-    //
+    //根据状态查询站点信息
+    @GET()
+    Observable<SitesBean> getSitesfromStatus(@Url String url,@Query("status") int status,@Query("pageNum") int pageNum,@Query("pageSize")int pageSize);
+
+
+    //根据状态查询站点信息
+    @GET()
+    Observable<NosellSiteBean> getNosellSite(@Url String url, @Query("status") int status, @Query("pageNum") int pageNum, @Query("pageSize")int pageSize);
 
 }

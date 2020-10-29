@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,6 +20,7 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.details.adapter.HisLeaseAdapter;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
 import com.yidian.chengshengda.utils.NetUtils;
 import com.youth.banner.Banner;
@@ -82,8 +84,8 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 getIntent();
         String id = intent.getStringExtra("id");
         //获取对应id下的站点详情
-       /* NetUtils.getInstance().getApis()
-                .getStationDetails("http://192.168.10.107:8081/station/selectStation","11")
+        NetUtils.getInstance().getApis()
+                .getStationDetails("http://192.168.10.111:8081/station/selectStation",id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StationDetailsBean>() {
@@ -95,21 +97,34 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     @Override
                     public void onNext(StationDetailsBean stationDetailsBean) {
                         String type = stationDetailsBean.getType();
-                        List<StationDetailsBean.ObjectBean> object = stationDetailsBean.getObject();
+                        List<StationDetailsBean.ObjectBean.StationsBean> stations = stationDetailsBean.getObject().getStations();
 
                         if(type.equals("OK")){
-                            if(object.size()>0 && object!=null){
-                                    StationDetailsBean.ObjectBean objectBean = object.get(0);
+                            if(stations.size()>0 && stations!=null){
+                                StationDetailsBean.ObjectBean.StationsBean stationsBean = stations.get(0);
 
-                                String place = objectBean.getPlace();
-                                int money = objectBean.getStationMoney();
-                                int status = objectBean.getStatus();
-                                String stationImg = objectBean.getStationImg();
+                                String place = stationsBean.getPlace();
+                                int money = stationsBean.getStationMoney();
+                                int status = stationsBean.getStatus();
+                                String stationImg = stationsBean.getStationImg();
 
 
                                 tvPrice.setText(money+"/月");
                                 tvAddress.setText(place);
-                                if(!stationImg.equals("null")){
+                                if(stationImg==null){
+                                    //如果图片为空
+                                    List<Integer> imgList1 = new ArrayList<>();
+                                    imgList1.add(R.mipmap.welcome);
+                                    //xbn设置
+                                    xbn.setIndicatorGravity(BannerConfig.CENTER);
+                                    xbn.setImageLoader(loader);
+                                    xbn.isAutoPlay(false);
+                                    //设置图片加载地址
+                                    xbn.setImages(imgList1)
+                                            //开始调用的方法，启动轮播图。
+                                            .start();
+                                }else{
+
                                     split = stationImg.split(",");
                                     if(split.length>0 && split!=null){
                                         Log.e("xxx","图片数组长度为"+split.length);
@@ -128,18 +143,6 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                                     .start();
                                         }
                                     }
-                                }else{
-
-                                    List<Integer> imgList1 = new ArrayList<>();
-                                    imgList1.add(R.mipmap.welcome);
-                                    //xbn设置
-                                    xbn.setIndicatorGravity(BannerConfig.CENTER);
-                                    xbn.setImageLoader(loader);
-                                    xbn.isAutoPlay(false);
-                                    //设置图片加载地址
-                                    xbn.setImages(imgList1)
-                                            //开始调用的方法，启动轮播图。
-                                            .start();
                                 }
 
                                 //判断当前状态
@@ -153,6 +156,23 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                     tvIssall.setBackground(getResources().getDrawable(R.drawable.details_bg_sell));
                                 }
                             }
+                            List<StationDetailsBean.ObjectBean.StationOldInfoBean> stationOldInfo = stationDetailsBean.getObject().getStationOldInfo();
+                            //获取历史租赁次数
+                            tvLeaseCount.setText(stationOldInfo.size()+"次已租");
+
+                            //判断租赁次数
+                            if(stationOldInfo.size()>0 && stationOldInfo!=null){
+                                rlNoHistory.setVisibility(View.GONE);
+                                rcHistory.setVisibility(View.VISIBLE);
+                                //创建历史租赁的适配器
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SiteDeletails.this, RecyclerView.VERTICAL, false);
+                                rcHistory.setLayoutManager(linearLayoutManager);
+                                HisLeaseAdapter hisLeaseAdapter = new HisLeaseAdapter(SiteDeletails.this, stationOldInfo);
+                                rcHistory.setAdapter(hisLeaseAdapter);
+                            }else{
+                                rlNoHistory.setVisibility(View.VISIBLE);
+                                rcHistory.setVisibility(View.GONE);
+                            }
                         }
                     }
 
@@ -165,7 +185,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     public void onComplete() {
 
                     }
-                });*/
+                });
 
     }
     @Override
