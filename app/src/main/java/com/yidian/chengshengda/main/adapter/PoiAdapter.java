@@ -58,11 +58,7 @@ public class PoiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String title = poiItem.getTitle();
         //地址
         String snippet = poiItem.getSnippet();
-        //经纬度
-        LatLonPoint latLonPoint = poiItem.getLatLonPoint();
-        double latitude = latLonPoint.getLatitude();
-        double longitude = latLonPoint.getLongitude();
-        latLng = new LatLng(latitude,longitude);
+
 
         ((ViewHolder)holder).tvName.setText(title+"");
         ((ViewHolder)holder).tvAddress.setText(snippet+"");
@@ -72,6 +68,13 @@ public class PoiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //经纬度
+                LatLonPoint latLonPoint = poiItem.getLatLonPoint();
+                double latitude = latLonPoint.getLatitude();
+                double longitude = latLonPoint.getLongitude();
+                latLng = new LatLng(latitude,longitude);
+
+
                 //将坐标信息传递到类
                 SendLocationBean sendLocationBean = new SendLocationBean();
                 sendLocationBean.setTitle(title);
@@ -79,7 +82,6 @@ public class PoiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 sendLocationBean.setLatLng(latLng);
 
                 EventBus.getDefault().post(sendLocationBean);
-
             }
         });
     }

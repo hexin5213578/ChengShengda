@@ -54,7 +54,6 @@ public class FragmentNoSell extends BaseFragment {
     @Override
     protected void getData() {
         sv.setHeader(new AliHeader(getContext()));
-        sv.setFooter(new AliFooter(getContext()));
 
 
         // TODO: 2020/10/28 0028 获取已售出站点信息
@@ -93,7 +92,7 @@ public class FragmentNoSell extends BaseFragment {
     public void getSites(int page,int pageSize){
         showDialog();
         NetUtils.getInstance().getApis()
-                .getNosellSite("http://192.168.10.111:8081/station/selectStationStatus",1,page,pageSize)
+                .getNosellSite("http://192.168.10.106:8081/station/selectStationStatus",1,page,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<NosellSiteBean>() {
@@ -115,6 +114,9 @@ public class FragmentNoSell extends BaseFragment {
                                 rcNosellsite.setLayoutManager(linearLayoutManager);
                                 NoSellSitesAdapter noSellSitesAdapter = new NoSellSitesAdapter(getContext(), list);
                                 rcNosellsite.setAdapter(noSellSitesAdapter);
+                            }
+                            if(list.size()>20){
+                                sv.setFooter(new AliFooter(getContext()));
                             }
                         }
                     }

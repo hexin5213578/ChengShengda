@@ -273,7 +273,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         }
         loading_view.show();
         //获取所有站点信息
-        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.111:8081/station/selStation")
+        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.106:8081/station/selStation")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AllStationBean>() {
@@ -319,7 +319,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
 
         if (type == 1) {
             MarkerOptions markerOptions = new MarkerOptions()
-                    .title(title+ id).snippet("(未出售)")
+                    .title(title+ id).snippet("(未租出)")
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.sall)));
             Marker marker = aMap.addMarker(markerOptions);
@@ -327,7 +327,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             Marker marker2 = aMap.addMarker(new MarkerOptions().
                     position(latLng).
                     icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.sell))).
-                    setFlat(false).title(title + id).snippet("(已出售)"));
+                    setFlat(false).title(title + id).snippet("(已租出)"));
         }
     }
     //infowindow单击事件
@@ -417,6 +417,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         KeyBoardUtils.closeKeyboard(etSearch);
 
         LatLng latLng = bean.getLatLng();
+        Log.e("xxx",latLng+"");
         String title = bean.getTitle();
         String address = bean.getAddress();
 
@@ -464,7 +465,27 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             }
         });
     }
-
+    //查询结果
+    @Override
+    public void onPoiSearched(PoiResult poiResult, int i) {
+        Log.e("xxx", i + "");
+        if (i == 1000) {
+            //解析result获取POI信息
+            ArrayList<PoiItem> pois = poiResult.getPois();
+            if (pois.size() > 0 && pois != null) {
+                for (int j =0;j<pois.size();j++){
+                    Log.e("xxx","经纬度分别为"+pois.get(j).getLatLonPoint().toString());
+                }
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+                rcSearch.setLayoutManager(linearLayoutManager);
+                poiAdapter = new PoiAdapter(getContext(), pois);
+                rcSearch.setAdapter(poiAdapter);
+            } else {
+                //如果查询失败 关键词不匹配 设置推荐关键字
+                Toast.makeText(getContext(), "关键字有误", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     /**
      * 判断高德地图app是否已经安装
      */
@@ -683,24 +704,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         }
     }
 
-    //查询结果
-    @Override
-    public void onPoiSearched(PoiResult poiResult, int i) {
-        Log.e("xxx", i + "");
-        if (i == 1000) {
-            //解析result获取POI信息
-            ArrayList<PoiItem> pois = poiResult.getPois();
-            if (pois.size() > 0 && pois != null) {
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-                rcSearch.setLayoutManager(linearLayoutManager);
-                poiAdapter = new PoiAdapter(getContext(), pois);
-                rcSearch.setAdapter(poiAdapter);
-            } else {
-                //如果查询失败 关键词不匹配 设置推荐关键字
-                Toast.makeText(getContext(), "关键字有误", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+
 
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int i) {

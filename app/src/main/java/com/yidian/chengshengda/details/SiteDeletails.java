@@ -36,6 +36,7 @@ import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.details.adapter.HisLeaseAdapter;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
+import com.yidian.chengshengda.main.bean.SaveShopCarBean;
 import com.yidian.chengshengda.utils.NetUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -83,9 +84,12 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
     private String place;
     private int money;
     private String stationImg;
-    private int progress;
-    private int progress1;
-    int a =1;
+    private SeekBar pro_month;
+    private SeekBar pro_year;
+    int month = 0;
+    int year = 0;
+    private PopupWindow mPopupWindow1;
+    private String id;
 
     @Override
     protected int getResId() {
@@ -105,11 +109,11 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         //拿到传递过来的站点编号
         Intent intent =
                 getIntent();
-        String id = intent.getStringExtra("id");
+        id = intent.getStringExtra("id");
         //获取对应id下的站点详情
         showDialog();
         NetUtils.getInstance().getApis()
-                .getStationDetails("http://192.168.10.111:8081/station/selectStation",id)
+                .getStationDetails("http://192.168.10.106:8081/station/selectStation", id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StationDetailsBean>() {
@@ -237,7 +241,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
             case R.id.tv_add_shopcar:
                 // TODO: 2020/10/26 0026 选择规格
                 //判断是否已出租
-                if(status==2){
+                if(status==1){
                     //给标记赋值
                     flag = 1;
                     showSelect();
@@ -246,7 +250,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 }
                 break;
             case R.id.tv_commit:
-                if(status==2){
+                if(status==1){
                     //给标记赋值
                     flag = 2;
                     showSelect();
@@ -256,6 +260,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 break;
         }
     }
+
     /**
      * 网络加载图片
      * 使用了Glide图片加载框架
@@ -291,8 +296,8 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         TextView tv_monthcount = view.findViewById(R.id.tv_month_count);
         TextView tv_year_title = view.findViewById(R.id.tv_year_title);
         ImageView iv_cancle = view.findViewById(R.id.iv_cancle);
-        SeekBar pro_month = view.findViewById(R.id.pro_month);
-        SeekBar pro_year = view.findViewById(R.id.pro_year);
+        pro_month = view.findViewById(R.id.pro_month);
+        pro_year = view.findViewById(R.id.pro_year);
         TextView tv_month = view.findViewById(R.id.tv_month);
         TextView tv_year = view.findViewById(R.id.tv_year);
         TextView tv_money = view.findViewById(R.id.tv_money);
@@ -317,31 +322,28 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
             }
         });
         tv_money.setText(money+"元");
+
         pro_month.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-
-            /**
-             * 拖动条进度改变的时候调用
-             */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tv_month.setText((progress+1)+"月");
                 //计算总价
                 tv_monthcount.setText(progress+1+"");
             }
-            /**
-             * 拖动条开始拖动的时候调用
-             */
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-            /**
-             * 拖动条停止拖动的时候调用
-             */
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                month = seekBar.getProgress();
 
+                year = pro_year.getProgress();
+                //设置总价
+                tv_money.setText((((month+1)*money)+(year*12*money))+"元");
             }
         });
         pro_year.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -365,18 +367,99 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                year = seekBar.getProgress();
+                month = pro_month.getProgress();
+                //设置总价
+                tv_money.setText((((month+1)*money)+(year*12*money))+"元");
             }
         });
 
-     /*   if(b<12){
-            tv_yixuan.setText("已选"+a+"月");
-            tv_money.setText(a*money+"元");
-        }else{
-            tv_yixuan.setText("已选"+ b +"月");
-            tv_money.setText(b *money+"元");
-        }*/
+        bt_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                //关闭选择规格弹出框
+                dismiss();
+                int count = (pro_year.getProgress()*12)+(pro_month.getProgress()+1);
+
+                //加入购物车
+                if (flag == 1){
+                    Log.e("xxx","加入购物车"+count+"");
+                    //调用加入购物车的接口
+                    showDialog();
+                    NetUtils.getInstance().getApis().joinShopcar("http://192.168.10.106:8081/shopping/insertModel",2,Integer.valueOf(id),count)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<SaveShopCarBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(SaveShopCarBean saveShopCarBean) {
+                                    hideDialog();
+                                    Toast.makeText(SiteDeletails.this, ""+saveShopCarBean.getMsg(), Toast.LENGTH_SHORT).show();
+
+                                    String type = saveShopCarBean.getType();
+                                    if(type.equals("OK")){
+
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    hideDialog();
+                                    Toast.makeText(SiteDeletails.this, "加入购物车失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }else{
+                    //提交
+                    Log.e("xxx",count+"");
+
+                    //弹出联系方式并创建订单
+                    //添加成功后处理
+                    mPopupWindow1 = new PopupWindow();
+                    mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                    mPopupWindow1.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                    View view2 = LayoutInflater.from(SiteDeletails.this).inflate(R.layout.dialog_phone,null);
+
+                    TextView tv_name = view2.findViewById(R.id.tv_name);
+                    TextView tv_number = view2.findViewById(R.id.tv_number);
+                    TextView tv_call = view2.findViewById(R.id.tv_call);
+
+                    tv_name.setText("冯坤");
+                    tv_number.setText("15652578310");
+                    tv_call.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String phone = tv_number.getText().toString();
+                            callPhone(phone);
+                        }
+                    });
+                    //popwindow设置属性
+                    mPopupWindow1.setContentView(view2);
+                    mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
+                    mPopupWindow1.setFocusable(true);
+                    mPopupWindow1.setOutsideTouchable(true);
+                    mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            setWindowAlpa(false);
+                        }
+                    });
+
+                    ((ViewGroup)view).removeAllViews();
+
+                    show1(view2);
+                }
+            }
+        });
 
         //popwindow设置属性
         mPopupWindow.setAnimationStyle(R.style.popwindow_anim_style);
@@ -429,15 +512,24 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
             mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
         }
         setWindowAlpa(true);
-
     }
-
+    private void show1(View v) {
+        if (mPopupWindow1 != null && !mPopupWindow1.isShowing()) {
+            mPopupWindow1.showAtLocation(v, Gravity.CENTER_HORIZONTAL, 0, 0);
+        }
+        setWindowAlpa(true);
+    }
     /**
      * 消失PopupWindow
      */
     public void dismiss() {
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
+        }
+    }
+    public void dismiss1() {
+        if (mPopupWindow1 != null && mPopupWindow1.isShowing()) {
+            mPopupWindow1.dismiss();
         }
     }
 }

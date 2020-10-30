@@ -3,6 +3,8 @@ package com.yidian.chengshengda.utils;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
 import com.yidian.chengshengda.login.bean.LoginBean;
 import com.yidian.chengshengda.main.bean.AllStationBean;
+import com.yidian.chengshengda.main.bean.SaveShopCarBean;
+import com.yidian.chengshengda.main.bean.ShopcarBean;
 import com.yidian.chengshengda.main.fragment.adv.bean.NosellSiteBean;
 import com.yidian.chengshengda.main.fragment.adv.bean.SitesBean;
 import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
@@ -48,13 +50,22 @@ public interface Apis {
     @GET()
     Observable<StationDetailsBean> getStationDetails(@Url String url , @Query("stationNum") String num);
 
-    //根据状态查询站点信息
+    //查询租出的站点
     @GET()
     Observable<SitesBean> getSitesfromStatus(@Url String url,@Query("status") int status,@Query("pageNum") int pageNum,@Query("pageSize")int pageSize);
 
 
-    //根据状态查询站点信息
+    //查询未租出的站点
     @GET()
     Observable<NosellSiteBean> getNosellSite(@Url String url, @Query("status") int status, @Query("pageNum") int pageNum, @Query("pageSize")int pageSize);
+
+
+    //加入购物车
+    @GET()
+    Observable<SaveShopCarBean> joinShopcar(@Url String url,@Query("userId")int userid,@Query("stationId")int stationid,@Query("monthTime")int monthcount);
+
+    //查询购物车
+    @GET()
+    Observable<ShopcarBean> getShopCar(@Url String url,@Query("userId")int userid,@Query("pageNum")int page,@Query("pageSize") int size);
 
 }
