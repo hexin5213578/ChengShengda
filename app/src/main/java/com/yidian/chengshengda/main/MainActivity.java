@@ -3,7 +3,6 @@ package com.yidian.chengshengda.main;
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -26,7 +25,6 @@ import com.yidian.chengshengda.main.fragment.FragmentMine;
 import com.yidian.chengshengda.main.fragment.FragmentShopCar;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedChangeListener {
 
@@ -71,6 +69,7 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void getData() {
+
         rbs[0] = rbHome;
         rbs[1] = rbAdv;
         rbs[2] = rbShopCar;
@@ -100,6 +99,9 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
          */
         rbHome.setChecked(true);
         //设置状态栏颜色
+
+
+
     }
 
     @Override
@@ -187,4 +189,5 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
             super.onBackPressed();
         }
     }
+
 }

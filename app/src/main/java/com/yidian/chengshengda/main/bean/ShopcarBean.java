@@ -246,6 +246,7 @@ public class ShopcarBean {
             // 有没有被勾选
             private boolean isPersonChecked = false;
 
+
             public boolean isPersonChecked() {
                 return isPersonChecked;
             }

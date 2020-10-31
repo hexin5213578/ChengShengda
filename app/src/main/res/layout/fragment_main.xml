@@ -114,6 +114,9 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_6"
             android:text="清华园"
+            android:maxEms="15"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_15"
             android:textStyle="bold"></TextView>

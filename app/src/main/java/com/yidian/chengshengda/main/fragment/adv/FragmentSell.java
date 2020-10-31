@@ -52,7 +52,6 @@ public class FragmentSell extends BaseFragment {
     @Override
     protected void getData() {
 
-        sv.setHeader(new AliHeader(getContext()));
 
 
         // TODO: 2020/10/28 0028 获取已售出站点信息
@@ -90,8 +89,9 @@ public class FragmentSell extends BaseFragment {
     }
     public void getSites(int page,int pageSize){
         showDialog();
+        // TODO: 2020/10/31 0031 查询已出租的站点
         NetUtils.getInstance().getApis()
-                .getSitesfromStatus("http://192.168.10.106:8081/station/selectStationStatus",2,page,pageSize)
+                .getSitesfromStatus("http://192.168.10.101:8081/station/selectStationStatus",2,page,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<SitesBean>() {
@@ -108,6 +108,8 @@ public class FragmentSell extends BaseFragment {
                         if(type.equals("OK")){
                             if(object.size()>0 && object!=null){
                                 //设置适配器
+                                sv.setHeader(new AliHeader(getContext()));
+
                                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                                 rcSell.setLayoutManager(linearLayoutManager);
                                 SellSitesAdapter sellSitesAdapter = new SellSitesAdapter(getContext(), object);

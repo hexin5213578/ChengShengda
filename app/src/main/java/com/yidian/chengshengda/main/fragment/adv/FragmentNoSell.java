@@ -91,8 +91,9 @@ public class FragmentNoSell extends BaseFragment {
     }
     public void getSites(int page,int pageSize){
         showDialog();
+        // TODO: 2020/10/31 0031 查询未出租的站点
         NetUtils.getInstance().getApis()
-                .getNosellSite("http://192.168.10.106:8081/station/selectStationStatus",1,page,pageSize)
+                .getNosellSite("http://192.168.10.101:8081/station/selectStationStatus",1,page,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<NosellSiteBean>() {
@@ -110,6 +111,8 @@ public class FragmentNoSell extends BaseFragment {
                         if(type.equals("OK")){
                             if(list.size()>0 && list!=null){
                                 //设置适配器
+                                sv.setHeader(new AliHeader(getContext()));
+
                                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                                 rcNosellsite.setLayoutManager(linearLayoutManager);
                                 NoSellSitesAdapter noSellSitesAdapter = new NoSellSitesAdapter(getContext(), list);

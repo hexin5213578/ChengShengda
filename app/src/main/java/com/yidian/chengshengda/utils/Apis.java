@@ -3,8 +3,10 @@ package com.yidian.chengshengda.utils;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
 import com.yidian.chengshengda.login.bean.LoginBean;
 import com.yidian.chengshengda.main.bean.AllStationBean;
+import com.yidian.chengshengda.main.bean.DeleteShopcarBean;
 import com.yidian.chengshengda.main.bean.SaveShopCarBean;
 import com.yidian.chengshengda.main.bean.ShopcarBean;
+import com.yidian.chengshengda.main.bean.UpdateShopcarMonthBean;
 import com.yidian.chengshengda.main.fragment.adv.bean.NosellSiteBean;
 import com.yidian.chengshengda.main.fragment.adv.bean.SitesBean;
 import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
@@ -27,7 +29,6 @@ public interface Apis {
     @GET("user/register")
     Observable<RegistBean> doRegist(@Query("phoneNum")String phone, @Query("password")String pwd);
 
-
     //密码登录
     @GET("user/userLogin")
     Observable<LoginBean> doPwdLogin(@Query("phoneNum")String phone, @Query("password")String pwd, @Query("accountType") int type, @Query("lng")double lng, @Query("lat")double lat);
@@ -45,7 +46,6 @@ public interface Apis {
     @GET()
     Observable<AllStationBean> getAllStation(@Url String url);
 
-
     //根据ID查询站点详情
     @GET()
     Observable<StationDetailsBean> getStationDetails(@Url String url , @Query("stationNum") String num);
@@ -54,11 +54,9 @@ public interface Apis {
     @GET()
     Observable<SitesBean> getSitesfromStatus(@Url String url,@Query("status") int status,@Query("pageNum") int pageNum,@Query("pageSize")int pageSize);
 
-
     //查询未租出的站点
     @GET()
     Observable<NosellSiteBean> getNosellSite(@Url String url, @Query("status") int status, @Query("pageNum") int pageNum, @Query("pageSize")int pageSize);
-
 
     //加入购物车
     @GET()
@@ -68,4 +66,11 @@ public interface Apis {
     @GET()
     Observable<ShopcarBean> getShopCar(@Url String url,@Query("userId")int userid,@Query("pageNum")int page,@Query("pageSize") int size);
 
+    //删除购物车
+    @GET()
+    Observable<DeleteShopcarBean> deleteShopCar(@Url String url,@Query("userId")int userid,@Query("stationId")String stationId);
+
+    //修改购物车里的站牌租期
+    @GET()
+    Observable<UpdateShopcarMonthBean> updateShopCar(@Url String url,@Query("userId")int userid,@Query("stationId") int stationid,@Query("monthTime")int time);
 }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,37 +67,40 @@ public class NoSellSitesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         //计算两点间的距离
         DistanceSearch distanceSearch = new DistanceSearch(context);
+        
+        if(Double.valueOf(lat)==0.0 || Double.valueOf(lng)==0.0){
+            Toast.makeText(context, "未获取到当前位置信息", Toast.LENGTH_SHORT).show();
+        }else{
+            LatLonPoint start = new LatLonPoint(Double.valueOf(lat), Double.valueOf(lng));
+            LatLonPoint end = new LatLonPoint(lat1, lng1);
 
-        LatLonPoint start = new LatLonPoint(Double.valueOf(lat), Double.valueOf(lng));
-        LatLonPoint end = new LatLonPoint(lat1, lng1);
+            distanceSearch.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
+                @Override
+                public void onDistanceSearched(DistanceResult distanceResult, int i) {
+                    if(i==1000){
+                        List<DistanceItem> distanceResults = distanceResult.getDistanceResults();
+                        distance = distanceResults.get(0).getDistance();
 
-        distanceSearch.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
-            @Override
-            public void onDistanceSearched(DistanceResult distanceResult, int i) {
-                if(i==1000){
-                    List<DistanceItem> distanceResults = distanceResult.getDistanceResults();
-                    distance = distanceResults.get(0).getDistance();
+                        if(distance<1000){
+                            ((ViewHolder)holder).tvDistance.setText(Integer.valueOf(String.valueOf(distance))+"m");
+                        }
+                        else if(distance>=1000){
+                            ((ViewHolder)holder).tvDistance.setText(StringUtil.round1(String.valueOf(distance/1000))+"km");
+                        }
 
-                    if(distance<1000){
-                        ((ViewHolder)holder).tvDistance.setText(Integer.valueOf(String.valueOf(distance))+"m");
                     }
-                    else if(distance>=1000){
-                        ((ViewHolder)holder).tvDistance.setText(StringUtil.round1(String.valueOf(distance/1000))+"km");
-                    }
-
                 }
-            }
-        });
-        DistanceSearch.DistanceQuery distanceQuery = new DistanceSearch.DistanceQuery();
-        List<LatLonPoint> latLonPoints = new ArrayList<LatLonPoint>();
-        latLonPoints.add(start);
-        //设置起点终点
-        distanceQuery.setOrigins(latLonPoints);
-        distanceQuery.setDestination(end);
-        //设置测量方式，支持直线和驾车
-        distanceQuery.setType(DistanceSearch.TYPE_DISTANCE);
-        distanceSearch.calculateRouteDistanceAsyn(distanceQuery);
-
+            });
+            DistanceSearch.DistanceQuery distanceQuery = new DistanceSearch.DistanceQuery();
+            List<LatLonPoint> latLonPoints = new ArrayList<LatLonPoint>();
+            latLonPoints.add(start);
+            //设置起点终点
+            distanceQuery.setOrigins(latLonPoints);
+            distanceQuery.setDestination(end);
+            //设置测量方式，支持直线和驾车
+            distanceQuery.setType(DistanceSearch.TYPE_DISTANCE);
+            distanceSearch.calculateRouteDistanceAsyn(distanceQuery);
+        }
         String stationImg = listBean.getStationImg();
 
         if(stationImg==null){

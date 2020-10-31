@@ -68,6 +68,7 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.custom.Loading_view;
 import com.yidian.chengshengda.details.SiteDeletails;
+import com.yidian.chengshengda.main.MainActivity;
 import com.yidian.chengshengda.main.activity.SeleteAreaActivity;
 import com.yidian.chengshengda.main.adapter.PoiAdapter;
 import com.yidian.chengshengda.main.bean.AllStationBean;
@@ -160,8 +161,6 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         //设置状态栏字体黑色
         StatusBarUtil.setDarkMode(getActivity());
 
-        //权限
-        Request();
         map.onCreate(savedInstanceState);
         if (aMap == null) {
             aMap = map.getMap();
@@ -169,6 +168,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
 
         UiSettings uiSettings =  aMap.getUiSettings();
         uiSettings.setLogoBottomMargin(-100);
+
 
 
         tvCancle.setOnClickListener(this);
@@ -244,6 +244,9 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         // 设置定位的类型为定位模式，有定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
+
+        mlocationClient.startLocation();
+
         aMap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
             private View infoWindow;
 
@@ -272,8 +275,8 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             loading_view = new Loading_view(getContext(), R.style.CustomDialog);
         }
         loading_view.show();
-        //获取所有站点信息
-        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.106:8081/station/selStation")
+        // TODO: 2020/10/31 0031  获取所有站点信息
+        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.101:8081/station/selStation")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AllStationBean>() {
@@ -290,7 +293,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                             if(object.size()>0 && object!=null){
                                 for (int i =0;i<object.size();i++){
                                     AllStationBean.ObjectBean objectBean = object.get(i);
-                                    DrawPoint(objectBean.getLat(),objectBean.getLng(),objectBean.getStatus(),Integer.valueOf(objectBean.getStationNum()),objectBean.getStationInfo());
+                                    DrawPoint(objectBean.getLat(),objectBean.getLng(),objectBean.getStatus(),Integer.valueOf(objectBean.getStationNum()),objectBean.getStationArea());
                                 }
                             }
                         }
@@ -299,6 +302,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
                     @Override
                     public void onError(Throwable e) {
                         loading_view.dismiss();
+                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -703,26 +707,8 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             Toast.makeText(getActivity(), ""+area, Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
     @Override
     public void onPoiItemSearched(PoiItem poiItem, int i) {
 
-    }
-    //安卓10.0定位权限
-    public void Request() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            int request = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
-            if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
-            {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-                return;//
-            } else {
-
-            }
-        } else {
-
-        }
     }
 }

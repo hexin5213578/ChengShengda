@@ -112,8 +112,9 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         id = intent.getStringExtra("id");
         //获取对应id下的站点详情
         showDialog();
+        // TODO: 2020/10/31 0031 根据ID查询站点详情
         NetUtils.getInstance().getApis()
-                .getStationDetails("http://192.168.10.106:8081/station/selectStation", id)
+                .getStationDetails("http://192.168.10.101:8081/station/selectStation", id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StationDetailsBean>() {
@@ -387,7 +388,8 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     Log.e("xxx","加入购物车"+count+"");
                     //调用加入购物车的接口
                     showDialog();
-                    NetUtils.getInstance().getApis().joinShopcar("http://192.168.10.106:8081/shopping/insertModel",2,Integer.valueOf(id),count)
+                    // TODO: 2020/10/31 0031 加入购物车
+                    NetUtils.getInstance().getApis().joinShopcar("http://192.168.10.101:8081/shopping/insertModel",2,Integer.valueOf(id),count)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<SaveShopCarBean>() {
