@@ -9,8 +9,12 @@ import com.yidian.chengshengda.main.bean.ShopcarBean;
 import com.yidian.chengshengda.main.bean.UpdateShopcarMonthBean;
 import com.yidian.chengshengda.main.fragment.adv.bean.NosellSiteBean;
 import com.yidian.chengshengda.main.fragment.adv.bean.SitesBean;
+import com.yidian.chengshengda.main.fragment.order.bean.DeleteOrderBean;
+import com.yidian.chengshengda.main.fragment.order.bean.OrderInfoBean;
 import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
 import com.yidian.chengshengda.regist.bean.RegistBean;
+import com.yidian.chengshengda.setpwd.bean.SetPwdBean;
+import com.yidian.chengshengda.setup.bean.UserInfoBean;
 
 import java.net.URL;
 
@@ -73,4 +77,33 @@ public interface Apis {
     //修改购物车里的站牌租期
     @GET()
     Observable<UpdateShopcarMonthBean> updateShopCar(@Url String url,@Query("userId")int userid,@Query("stationId") int stationid,@Query("monthTime")int time);
+
+    //查询id查找用户信息
+    @GET()
+    Observable<UserInfoBean> getUserInfo(@Url String url,@Query("userId")int userid);
+
+    //修改用户密码
+    @GET()
+    Observable<SetPwdBean> doSetPwd(@Url String url,@Query("userId") int userid,@Query("oldPassword")String oldPwd,@Query("password")String pwd);
+
+    //修改用户头像
+    @GET()
+    Observable<SetPwdBean> doSetHeadImg(@Url String url,@Query("id")int id,@Query("headImg")String headimg);
+
+    //修改用户昵称
+    @GET()
+    Observable<SetPwdBean> dosetNikeName(@Url String url,@Query("id")int id,@Query("nickName")String nikeName);
+
+    //添加订单
+    @GET()
+    Observable<SetPwdBean> doAddOrder(@Url String url,@Query("userId")int id,@Query("stationNum")String stationnum,@Query("month")String month);
+
+    //查询订单
+    @GET()
+    Observable<OrderInfoBean> getOrderInfo(@Url String url,@Query("userId")int id,@Query("page")int page,@Query("pageSize")int pagesize);
+
+    //通过id删除单个订单
+    @GET()
+    Observable<DeleteOrderBean> doDeleteOrder(@Url String url,@Query("id")int id);
+
 }

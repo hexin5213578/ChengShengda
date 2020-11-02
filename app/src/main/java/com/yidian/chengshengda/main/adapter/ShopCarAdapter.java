@@ -86,7 +86,7 @@ public class ShopCarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //修改购物车里的站牌租期
                 // TODO: 2020/10/31 0031 修改购物车数据
                 NetUtils.getInstance().getApis()
-                        .updateShopCar("http://192.168.10.101:8081/shopping/updateShopping",userId,stationId,count)
+                        .updateShopCar("http://192.168.10.104:8081/shopping/updateShopping",userId,stationId,count)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<UpdateShopcarMonthBean>() {

@@ -1,11 +1,16 @@
 package com.yidian.chengshengda.details;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,14 +22,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,8 +44,11 @@ import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.details.adapter.HisLeaseAdapter;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
+import com.yidian.chengshengda.main.MainActivity;
 import com.yidian.chengshengda.main.bean.SaveShopCarBean;
+import com.yidian.chengshengda.setpwd.bean.SetPwdBean;
 import com.yidian.chengshengda.utils.NetUtils;
+import com.yidian.chengshengda.welcome.WelcomeActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.ImageLoader;
@@ -52,11 +63,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.yidian.chengshengda.base.App.getContext;
+
 public class SiteDeletails extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.back)
-    ImageView back;
+    LinearLayout back;
     @BindView(R.id.xbn)
     Banner xbn;
     @BindView(R.id.tv_price)
@@ -79,7 +92,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
     private String[] split;
     private ImageLoader loader;
     private int status;
-    int flag ;
+    int flag;
     private PopupWindow mPopupWindow;
     private String place;
     private int money;
@@ -90,6 +103,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
     int year = 0;
     private PopupWindow mPopupWindow1;
     private String id;
+    private String phone;
 
     @Override
     protected int getResId() {
@@ -114,7 +128,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         showDialog();
         // TODO: 2020/10/31 0031 根据ID查询站点详情
         NetUtils.getInstance().getApis()
-                .getStationDetails("http://192.168.10.101:8081/station/selectStation", id)
+                .getStationDetails("http://192.168.10.104:8081/station/selectStation", id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StationDetailsBean>() {
@@ -122,6 +136,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     public void onSubscribe(Disposable d) {
 
                     }
+
                     @SuppressLint("ResourceAsColor")
                     @Override
                     public void onNext(StationDetailsBean stationDetailsBean) {
@@ -129,8 +144,8 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                         String type = stationDetailsBean.getType();
                         List<StationDetailsBean.ObjectBean.StationsBean> stations = stationDetailsBean.getObject().getStations();
 
-                        if(type.equals("OK")){
-                            if(stations.size()>0 && stations!=null){
+                        if (type.equals("OK")) {
+                            if (stations.size() > 0 && stations != null) {
                                 StationDetailsBean.ObjectBean.StationsBean stationsBean = stations.get(0);
 
                                 place = stationsBean.getPlace();
@@ -138,9 +153,9 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                 status = stationsBean.getStatus();
                                 stationImg = stationsBean.getStationImg();
 
-                                tvPrice.setText(money +"/月");
+                                tvPrice.setText(money + "/月");
                                 tvAddress.setText(place);
-                                if(stationImg ==null){
+                                if (stationImg == null) {
                                     //如果图片为空
                                     List<Integer> imgList1 = new ArrayList<>();
                                     imgList1.add(R.mipmap.welcome);
@@ -154,15 +169,15 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                     xbn.setImages(imgList1)
                                             //开始调用的方法，启动轮播图。
                                             .start();
-                                }else{
+                                } else {
 
                                     split = stationImg.split(",");
-                                    if(split.length>0 && split!=null){
-                                        Log.e("xxx","图片数组长度为"+split.length);
-                                        for (int i = 0; i< split.length; i++){
+                                    if (split.length > 0 && split != null) {
+                                        Log.e("xxx", "图片数组长度为" + split.length);
+                                        for (int i = 0; i < split.length; i++) {
                                             imgList.add(split[i]);
                                         }
-                                        if(imgList.size()>0 && imgList!=null){
+                                        if (imgList.size() > 0 && imgList != null) {
                                             //轮播图设置数据
                                             //设置指示器的位置，小点点，居中显示
                                             xbn.setIndicatorGravity(BannerConfig.CENTER);
@@ -177,11 +192,11 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                 }
 
                                 //判断当前状态
-                                if(status ==1){
+                                if (status == 1) {
                                     tvIssall.setTextColor(getResources().getColor(R.color.color_0BA4E9));
                                     tvIssall.setText("未租出");
                                     tvIssall.setBackground(getResources().getDrawable(R.drawable.details_bg));
-                                }else if(status ==2){
+                                } else if (status == 2) {
                                     tvIssall.setTextColor(getResources().getColor(R.color.red_an));
                                     tvIssall.setText("已租出");
                                     tvIssall.setBackground(getResources().getDrawable(R.drawable.details_bg_sell));
@@ -189,10 +204,10 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                             }
                             List<StationDetailsBean.ObjectBean.StationOldInfoBean> stationOldInfo = stationDetailsBean.getObject().getStationOldInfo();
                             //获取历史租赁次数
-                            tvLeaseCount.setText(stationOldInfo.size()+"次已租");
+                            tvLeaseCount.setText(stationOldInfo.size() + "次已租");
 
                             //判断租赁次数
-                            if(stationOldInfo.size()>0 && stationOldInfo!=null){
+                            if (stationOldInfo.size() > 0 && stationOldInfo != null) {
                                 rlNoHistory.setVisibility(View.GONE);
                                 rcHistory.setVisibility(View.VISIBLE);
                                 //创建历史租赁的适配器
@@ -200,7 +215,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                 rcHistory.setLayoutManager(linearLayoutManager);
                                 HisLeaseAdapter hisLeaseAdapter = new HisLeaseAdapter(SiteDeletails.this, stationOldInfo);
                                 rcHistory.setAdapter(hisLeaseAdapter);
-                            }else{
+                            } else {
                                 rlNoHistory.setVisibility(View.VISIBLE);
                                 rcHistory.setVisibility(View.GONE);
                             }
@@ -220,6 +235,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 });
 
     }
+
     @Override
     protected BasePresenter initPresenter() {
         return null;
@@ -234,28 +250,28 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-                //返回
+            //返回
             case R.id.back:
                 finish();
                 break;
-                //加入购物车
+            //加入购物车
             case R.id.tv_add_shopcar:
                 // TODO: 2020/10/26 0026 选择规格
                 //判断是否已出租
-                if(status==1){
+                if (status == 1) {
                     //给标记赋值
                     flag = 1;
                     showSelect();
-                }else{
+                } else {
                     Toast.makeText(this, "站点已出租", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.tv_commit:
-                if(status==1){
+                if (status == 1) {
                     //给标记赋值
                     flag = 2;
                     showSelect();
-                }else{
+                } else {
                     Toast.makeText(this, "站点已出租", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -274,6 +290,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     .into(imageView);
         }
     }
+
     //重新进入时隐藏弹出框
     @Override
     protected void onRestart() {
@@ -287,7 +304,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         mPopupWindow = new PopupWindow();
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        View view = LayoutInflater.from(this).inflate(R.layout.dailog_select_spec,null);
+        View view = LayoutInflater.from(this).inflate(R.layout.dailog_select_spec, null);
 
         CustomRoundAngleImageView img = view.findViewById(R.id.iv_img);
         TextView tv_distance = view.findViewById(R.id.tv_sites_distance);
@@ -296,7 +313,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         TextView tv_yearcount = view.findViewById(R.id.tv_year_count);
         TextView tv_monthcount = view.findViewById(R.id.tv_month_count);
         TextView tv_year_title = view.findViewById(R.id.tv_year_title);
-        ImageView iv_cancle = view.findViewById(R.id.iv_cancle);
+        LinearLayout iv_cancle = view.findViewById(R.id.iv_cancle);
         pro_month = view.findViewById(R.id.pro_month);
         pro_year = view.findViewById(R.id.pro_year);
         TextView tv_month = view.findViewById(R.id.tv_month);
@@ -304,33 +321,33 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         TextView tv_money = view.findViewById(R.id.tv_money);
         Button bt_confirm = view.findViewById(R.id.bt_confirm);
 
-        if(stationImg ==null){
+        if (stationImg == null) {
             //如果图片为空
             Glide.with(this).load(R.mipmap.headimg).into(img);
-        }else{
+        } else {
 
             split = stationImg.split(",");
-            if(split.length>0 && split!=null){
+            if (split.length > 0 && split != null) {
                 Glide.with(this).load(split[0]).into(img);
             }
         }
         tv_distance.setText(place);
-        tv_price.setText("￥"+money+"");
+        tv_price.setText("￥" + money + "");
         iv_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
-        tv_money.setText(money+"元");
+        tv_money.setText(money + "元");
 
         pro_month.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tv_month.setText((progress+1)+"月");
+                tv_month.setText((progress + 1) + "月");
                 //计算总价
-                tv_monthcount.setText(progress+1+"");
+                tv_monthcount.setText(progress + 1 + "");
             }
 
             @Override
@@ -344,20 +361,20 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
                 year = pro_year.getProgress();
                 //设置总价
-                tv_money.setText((((month+1)*money)+(year*12*money))+"元");
+                tv_money.setText((((month + 1) * money) + (year * 12 * money)) + "元");
             }
         });
         pro_year.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tv_year.setText((progress)+"年");
-                if(progress==0){
+                tv_year.setText((progress) + "年");
+                if (progress == 0) {
                     tv_year_title.setVisibility(View.GONE);
                     tv_yearcount.setVisibility(View.GONE);
-                }else{
+                } else {
                     tv_year_title.setVisibility(View.VISIBLE);
                     tv_yearcount.setVisibility(View.VISIBLE);
-                    tv_yearcount.setText(progress+"");
+                    tv_yearcount.setText(progress + "");
                 }
             }
 
@@ -371,7 +388,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                 year = seekBar.getProgress();
                 month = pro_month.getProgress();
                 //设置总价
-                tv_money.setText((((month+1)*money)+(year*12*money))+"元");
+                tv_money.setText((((month + 1) * money) + (year * 12 * money)) + "元");
             }
         });
 
@@ -381,15 +398,15 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
                 //关闭选择规格弹出框
                 dismiss();
-                int count = (pro_year.getProgress()*12)+(pro_month.getProgress()+1);
+                int count = (pro_year.getProgress() * 12) + (pro_month.getProgress() + 1);
 
                 //加入购物车
-                if (flag == 1){
-                    Log.e("xxx","加入购物车"+count+"");
+                if (flag == 1) {
+                    Log.e("xxx", "加入购物车" + count + "");
                     //调用加入购物车的接口
                     showDialog();
                     // TODO: 2020/10/31 0031 加入购物车
-                    NetUtils.getInstance().getApis().joinShopcar("http://192.168.10.101:8081/shopping/insertModel",2,Integer.valueOf(id),count)
+                    NetUtils.getInstance().getApis().joinShopcar("http://192.168.10.104:8081/shopping/insertModel", 2, Integer.valueOf(id), count)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<SaveShopCarBean>() {
@@ -401,10 +418,10 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                 @Override
                                 public void onNext(SaveShopCarBean saveShopCarBean) {
                                     hideDialog();
-                                    Toast.makeText(SiteDeletails.this, ""+saveShopCarBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SiteDeletails.this, "" + saveShopCarBean.getMsg(), Toast.LENGTH_SHORT).show();
 
                                     String type = saveShopCarBean.getType();
-                                    if(type.equals("OK")){
+                                    if (type.equals("OK")) {
 
                                     }
                                 }
@@ -420,45 +437,74 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
                                 }
                             });
-                }else{
+                } else {
                     //提交
-                    Log.e("xxx",count+"");
+                    showDialog();
+                    NetUtils.getInstance().getApis()
+                            .doAddOrder("http://192.168.10.104:8081/order/insertOrderList",49,id,String.valueOf(count))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<SetPwdBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
 
-                    //弹出联系方式并创建订单
-                    //添加成功后处理
-                    mPopupWindow1 = new PopupWindow();
-                    mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                    mPopupWindow1.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-                    View view2 = LayoutInflater.from(SiteDeletails.this).inflate(R.layout.dialog_phone,null);
+                                }
 
-                    TextView tv_name = view2.findViewById(R.id.tv_name);
-                    TextView tv_number = view2.findViewById(R.id.tv_number);
-                    TextView tv_call = view2.findViewById(R.id.tv_call);
+                                @Override
+                                public void onNext(SetPwdBean setPwdBean) {
+                                    hideDialog();
+                                    if(setPwdBean.getType().equals("OK")){
+                                        Toast.makeText(SiteDeletails.this, "订单提交成功", Toast.LENGTH_SHORT).show();
 
-                    tv_name.setText("冯坤");
-                    tv_number.setText("15652578310");
-                    tv_call.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String phone = tv_number.getText().toString();
-                            callPhone(phone);
-                        }
-                    });
-                    //popwindow设置属性
-                    mPopupWindow1.setContentView(view2);
-                    mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
-                    mPopupWindow1.setFocusable(true);
-                    mPopupWindow1.setOutsideTouchable(true);
-                    mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            setWindowAlpa(false);
-                        }
-                    });
+                                        //弹出联系方式并创建订单
+                                        //添加成功后处理
+                                        mPopupWindow1 = new PopupWindow();
+                                        mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        mPopupWindow1.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        View view2 = LayoutInflater.from(SiteDeletails.this).inflate(R.layout.dialog_phone, null);
 
-                    ((ViewGroup)view).removeAllViews();
+                                        TextView tv_name = view2.findViewById(R.id.tv_name);
+                                        TextView tv_number = view2.findViewById(R.id.tv_number);
+                                        TextView tv_call = view2.findViewById(R.id.tv_call);
 
-                    show1(view2);
+                                        tv_name.setText("冯坤");
+                                        tv_number.setText("15652578310");
+                                        tv_call.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                phone = tv_number.getText().toString();
+                                                callPhone(phone);
+                                            }
+                                        });
+                                        //popwindow设置属性
+                                        mPopupWindow1.setContentView(view2);
+                                        mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
+                                        mPopupWindow1.setFocusable(true);
+                                        mPopupWindow1.setOutsideTouchable(true);
+                                        mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss() {
+                                                setWindowAlpa(false);
+                                            }
+                                        });
+
+                                        ((ViewGroup) view).removeAllViews();
+
+                                        show1(view2);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+
                 }
             }
         });
@@ -466,8 +512,11 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         //popwindow设置属性
         mPopupWindow.setAnimationStyle(R.style.popwindow_anim_style);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setFocusable(true);
+        Bitmap bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.dialog_select_time_bg);
+        Drawable drawable = new BitmapDrawable(getContext().getResources(), bmp);
+        // 不带参的方法已经deprecated
+        mPopupWindow.setBackgroundDrawable(drawable);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -480,7 +529,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
     //设置透明度
     public void setWindowAlpa(boolean isopen) {
-        if (android.os.Build.VERSION.SDK_INT < 11) {
+        if (Build.VERSION.SDK_INT < 11) {
             return;
         }
         final Window window = this.getWindow();
@@ -515,12 +564,14 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         }
         setWindowAlpa(true);
     }
+
     private void show1(View v) {
         if (mPopupWindow1 != null && !mPopupWindow1.isShowing()) {
             mPopupWindow1.showAtLocation(v, Gravity.CENTER_HORIZONTAL, 0, 0);
         }
         setWindowAlpa(true);
     }
+
     /**
      * 消失PopupWindow
      */
@@ -529,9 +580,5 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
             mPopupWindow.dismiss();
         }
     }
-    public void dismiss1() {
-        if (mPopupWindow1 != null && mPopupWindow1.isShowing()) {
-            mPopupWindow1.dismiss();
-        }
-    }
+
 }

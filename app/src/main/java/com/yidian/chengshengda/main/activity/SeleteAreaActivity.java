@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +17,7 @@ import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.main.adapter.AreaAdapter;
 import com.yidian.chengshengda.main.bean.SaveAreaBean;
+import com.yidian.chengshengda.main.bean.SaveLocationBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,7 +35,7 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.back)
-    ImageView back;
+    LinearLayout back;
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.tv_mylocation)
@@ -46,6 +47,8 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
     String[] str = {"渝中区", "万州区", "涪陵区", "大渡口区", "沙坪坝区", "九龙坡区", "南岸区", "北碚区", "綦江区", "大足区",
             "渝北区", "巴南区", "黔江区", "长寿区", "江津区", "合川区", "永川区", "南川区", "璧山区", "铜梁区", "潼南区", "荣昌区", "开州区", "梁平区", "武隆区"
             , "城口县", "丰都县", "垫江县", "忠县", "云阳县", "奉节县", "巫山县", "巫溪县", "石柱土家族自治县", "秀山土家族苗族自治县", "酉阳土家族苗族自治县", "彭水苗族土家族自治县"};
+    @BindView(R.id.l1)
+    LinearLayout l1;
     private List<String> list;
 
     @Override
@@ -55,7 +58,7 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
 
     @Override
     protected void getData() {
-        StatusBarUtil.setGradientColor(this,toolbar);
+        StatusBarUtil.setGradientColor(this, toolbar);
         StatusBarUtil.setDarkMode(this);
 
         Intent intent = getIntent();
@@ -63,17 +66,24 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
         //设置当前定位点
         tvMylocation.setText(area);
 
-
+        l1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SaveLocationBean saveLocationBean = new SaveLocationBean();
+                EventBus.getDefault().post(saveLocationBean);
+                finish();
+            }
+        });
         back.setOnClickListener(this);
         title.setText("定位");
         list = new ArrayList<>();
-        for (int i =0;i<str.length;i++){
+        for (int i = 0; i < str.length; i++) {
             list.add(str[i]);
         }
         //创建适配器
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         rcArea.setLayoutManager(gridLayoutManager);
-        AreaAdapter areaAdapter = new AreaAdapter(this,list);
+        AreaAdapter areaAdapter = new AreaAdapter(this, list);
         rcArea.setAdapter(areaAdapter);
     }
 
@@ -84,16 +94,17 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getArea(SaveAreaBean saveAreaBean){
+    public void getArea(SaveAreaBean saveAreaBean) {
         String area = saveAreaBean.getArea();
-        if(!TextUtils.isEmpty(area)){
+        if (!TextUtils.isEmpty(area)) {
             finish();
         }
     }
@@ -101,7 +112,7 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
@@ -109,8 +120,15 @@ public class SeleteAreaActivity extends BaseAvtivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

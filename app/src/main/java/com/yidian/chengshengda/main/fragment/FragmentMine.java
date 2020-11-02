@@ -2,6 +2,7 @@ package com.yidian.chengshengda.main.fragment;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,12 +29,18 @@ import com.yidian.chengshengda.main.fragment.order.FragmentFailed;
 import com.yidian.chengshengda.main.fragment.order.FragmentFinished;
 import com.yidian.chengshengda.main.fragment.order.FragmentLeased;
 import com.yidian.chengshengda.setup.SetupActivity;
+import com.yidian.chengshengda.setup.bean.UserInfoBean;
+import com.yidian.chengshengda.utils.NetUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class FragmentMine extends BaseFragment {
     @BindView(R.id.tab)
@@ -48,10 +55,6 @@ public class FragmentMine extends BaseFragment {
     ImageView ivSetup;
     @BindView(R.id.tv_name)
     TextView tvName;
-    @BindView(R.id.iv_xingbie)
-    ImageView ivXingbie;
-    @BindView(R.id.tv_age)
-    TextView tvAge;
     private List<String> tabs = new ArrayList<>();
     List<Fragment> fragments = new ArrayList<>();
 
@@ -93,8 +96,6 @@ public class FragmentMine extends BaseFragment {
         fragments.add(fragmentFailed);
         fragments.add(fragmentFinished);
 
-        //加载一张圆角头像
-        Glide.with(getContext()).load(R.mipmap.headimg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
         //设置的单击事件
         ivSetup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,8 +106,7 @@ public class FragmentMine extends BaseFragment {
         });
 
         //设置基本信息
-
-
+        getUserInfo(1);
 
         //设置tab的长度
         tab.post(new Runnable() {
@@ -205,5 +205,66 @@ public class FragmentMine extends BaseFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("xxx","onResume()");
+        getUserInfo(1);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("xxx","onPause()");
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.e("xxx","onHiddenChanged()");
+    }
+
+    //获取用户信息
+    public void getUserInfo(int id){
+        //获取用户信息
+        showDialog();
+        NetUtils.getInstance().getApis()
+                .getUserInfo("http://192.168.10.104:8081/user/selectUserInfoByIdx",49)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserInfoBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(UserInfoBean userInfoBean) {
+                        hideDialog();
+                        UserInfoBean.ObjectBean object = userInfoBean.getObject();
+                        if(userInfoBean.getType().equals("OK")){
+                            tvName.setText(object.getNickName());
+
+                            String headImg = object.getHeadImg();
+                            if(headImg==null || headImg.equals("")){
+                                //头像为空  设置默认头像
+                                Glide.with(getActivity()).load(R.mipmap.head).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                            }else{
+                                //加载头像
+                                Glide.with(getActivity()).load(headImg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideDialog();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 }

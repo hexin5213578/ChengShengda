@@ -102,21 +102,13 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
     protected abstract void getData();
     protected abstract P initPresenter();
 
-    //  关闭软键盘
-    public void closekeyboard(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE); //得到InputMethodManager的实例
-        if (imm.isActive()) {//如果开启
-            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);//关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
-        }
-    }
-
     /**
      * 拨打电话（直接拨打电话）
      *
      * @param phoneNum 电话号码
      */
     public void callPhone(String phoneNum) {
-        Intent intent = new Intent(Intent.ACTION_CALL);
+        Intent intent = new Intent(Intent.ACTION_DIAL);
         Uri data = Uri.parse("tel:" + phoneNum);
         intent.setData(data);
         startActivity(intent);

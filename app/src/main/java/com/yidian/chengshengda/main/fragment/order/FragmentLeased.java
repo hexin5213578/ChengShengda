@@ -5,19 +5,24 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.liaoinstan.springview.widget.SpringView;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseFragment;
 import com.yidian.chengshengda.base.BasePresenter;
-import com.yidian.chengshengda.main.adapter.OrderAdapter;
+import com.yidian.chengshengda.main.fragment.order.adapter.OrderAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
+//租赁中
+
 public class FragmentLeased extends BaseFragment {
     @BindView(R.id.rc_order)
     RecyclerView rcOrder;
+    @BindView(R.id.sv)
+    SpringView sv;
 
     @Override
     protected void getid(View view) {
@@ -42,7 +47,7 @@ public class FragmentLeased extends BaseFragment {
         //创建数据
         List<String> list = new ArrayList<>();
         list.add("梦阳");
-        OrderAdapter orderAdapter = new OrderAdapter(getContext(),list);
+        OrderAdapter orderAdapter = new OrderAdapter(getContext(), list);
         rcOrder.setAdapter(orderAdapter);
 
     }

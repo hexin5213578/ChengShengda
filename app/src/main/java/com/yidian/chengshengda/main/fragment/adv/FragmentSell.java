@@ -91,7 +91,7 @@ public class FragmentSell extends BaseFragment {
         showDialog();
         // TODO: 2020/10/31 0031 查询已出租的站点
         NetUtils.getInstance().getApis()
-                .getSitesfromStatus("http://192.168.10.101:8081/station/selectStationStatus",2,page,pageSize)
+                .getSitesfromStatus("http://192.168.10.104:8081/station/selectStationStatus",2,page,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<SitesBean>() {

@@ -93,7 +93,7 @@ public class FragmentNoSell extends BaseFragment {
         showDialog();
         // TODO: 2020/10/31 0031 查询未出租的站点
         NetUtils.getInstance().getApis()
-                .getNosellSite("http://192.168.10.101:8081/station/selectStationStatus",1,page,pageSize)
+                .getNosellSite("http://192.168.10.104:8081/station/selectStationStatus",1,page,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<NosellSiteBean>() {

@@ -73,6 +73,7 @@ import com.yidian.chengshengda.main.activity.SeleteAreaActivity;
 import com.yidian.chengshengda.main.adapter.PoiAdapter;
 import com.yidian.chengshengda.main.bean.AllStationBean;
 import com.yidian.chengshengda.main.bean.SaveAreaBean;
+import com.yidian.chengshengda.main.bean.SaveLocationBean;
 import com.yidian.chengshengda.main.bean.SendLocationBean;
 import com.yidian.chengshengda.regist.activity.RegistActivity;
 import com.yidian.chengshengda.utils.KeyBoardUtils;
@@ -276,7 +277,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         }
         loading_view.show();
         // TODO: 2020/10/31 0031  获取所有站点信息
-        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.101:8081/station/selStation")
+        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.104:8081/station/selStation")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AllStationBean>() {
@@ -315,7 +316,12 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         aMap.setOnInfoWindowClickListener(listener);
         return view;
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getLocation(SaveLocationBean bean){
+        //点击当前定位重新获取当前位置
 
+        mlocationClient.startLocation();
+    }
     //画点
     public void DrawPoint(double latitude, double longitude, int type, int id,String title) {
 

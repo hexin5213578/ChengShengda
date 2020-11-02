@@ -2,6 +2,8 @@ package com.yidian.chengshengda.base;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,5 +99,16 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         if (getUserVisibleHint()) {
             getData();
         }
+    }
+    /**
+     * 拨打电话（直接拨打电话）
+     *
+     * @param phoneNum 电话号码
+     */
+    public void callPhone(String phoneNum) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        intent.setData(data);
+        startActivity(intent);
     }
 }

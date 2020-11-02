@@ -22,13 +22,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -37,9 +40,14 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.base.Common;
 import com.yidian.chengshengda.changepwd.ChangePwdActivity;
 import com.yidian.chengshengda.login.activity.LoginActivity;
+import com.yidian.chengshengda.setpwd.bean.SetPwdBean;
+import com.yidian.chengshengda.setup.bean.UserInfoBean;
 import com.yidian.chengshengda.utils.DataCleanManager;
+import com.yidian.chengshengda.utils.KeyBoardUtils;
+import com.yidian.chengshengda.utils.NetUtils;
 import com.yidian.chengshengda.utils.SPUtil;
 
 import org.lym.image.select.PictureSelector;
@@ -48,6 +56,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class SetupActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.iv_headimg)
@@ -75,11 +87,12 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.back)
-    ImageView back;
+    LinearLayout back;
     @BindView(R.id.title)
     TextView title;
     private String path;
     private PopupWindow mPopupWindow;
+    private int id;
 
     @Override
     protected int getResId() {
@@ -101,14 +114,11 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         tvZhuxiao.setOnClickListener(this);
         tvCancle.setOnClickListener(this);
         title.setText("设置");
-        //申请开启内存卡权限
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && (this.checkSelfPermission
-                (Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-            //请求权限
-            this.requestPermissions(new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
+
+        //获取权限
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                100);
 
         //获取当前应用版本号
         String appVersionName = "";
@@ -123,9 +133,72 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         tvBanben.setText(appVersionName + "");
 
         //获取缓存
-        String totalCacheSize = DataCleanManager.getTotalCacheSize(this);
+        String totalCacheSize = null;
+        try {
+            totalCacheSize = DataCleanManager.getTotalCacheSize(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         tvHuancun.setText(totalCacheSize);
 
+        //id = Integer.valueOf(Common.getUserId());
+
+        //获取用户信息
+        showDialog();
+        NetUtils.getInstance().getApis()
+                .getUserInfo("http://192.168.10.104:8081/user/selectUserInfoByIdx",49)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserInfoBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(UserInfoBean userInfoBean) {
+                        hideDialog();
+                        UserInfoBean.ObjectBean object = userInfoBean.getObject();
+                        if(userInfoBean.getType().equals("OK")){
+                            tvName.setText(object.getNickName());
+
+                            String headImg = object.getHeadImg();
+                            if(headImg==null || headImg.equals("")){
+                                //头像为空  设置默认头像
+                                Glide.with(SetupActivity.this).load(R.mipmap.head).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                            }else{
+                                //加载头像
+                                Glide.with(SetupActivity.this).load(headImg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideDialog();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+
+            } else
+            {
+                // Permission Denied
+                Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     @Override
@@ -176,6 +249,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             //注销账号
             case R.id.tv_zhuxiao:
                 // TODO: 2020/10/28 0028 调用注销账号接口
+
                 break;
             //退出登录
             case R.id.tv_cancle:
@@ -199,6 +273,37 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                 Glide.with(this).load(path).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
 
                 // TODO: 2020/10/28 0028 上传到服务器
+                showDialog();
+                NetUtils.getInstance().getApis().doSetHeadImg("http://192.168.10.104:8081/userInfo/updateUserInfo",49,path)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<SetPwdBean>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(SetPwdBean setPwdBean) {
+                                hideDialog();
+                                if(setPwdBean.getType().equals("OK")){
+                                    Toast.makeText(SetupActivity.this, "头像修改成功", Toast.LENGTH_SHORT).show();
+                                    //将更换的头像存入SP
+                                    SPUtil.getInstance().saveData(SetupActivity.this,SPUtil.FILE_NAME,SPUtil.HEAD_IMG,path);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                hideDialog();
+                                Toast.makeText(SetupActivity.this, "头像修改失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
             }
         }
     }
@@ -252,8 +357,43 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                 //获取输入框文本  判空发起更换昵称的网络请求  请求成功关闭弹出框
                 String s = et_name.getText().toString();
                 if (!TextUtils.isEmpty(s)) {
-                    // TODO: 2020/10/28 0028 上传到服务器
+                    // TODO: 2020/10/28 0028 调用修改昵称的接口
 
+                    showDialog();
+                    NetUtils.getInstance().getApis()
+                            .dosetNikeName("http://192.168.10.104:8081/userInfo/updateUserInfo",49,s)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<SetPwdBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(SetPwdBean setPwdBean) {
+                                    hideDialog();
+                                    if(setPwdBean.getType().equals("OK")){
+                                        //隐藏弹出框
+                                        dismiss();
+                                        KeyBoardUtils.closeKeyboard(SetupActivity.this);
+                                        Toast.makeText(SetupActivity.this, "昵称修改成功", Toast.LENGTH_SHORT).show();
+                                        //将更换的头像存入SP
+                                        tvName.setText(s);
+                                        SPUtil.getInstance().saveData(SetupActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,s);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
 
                 } else {
                     Toast.makeText(SetupActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
@@ -297,7 +437,12 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                 DataCleanManager.clearAllCache(SetupActivity.this);
 
                 //重新获取缓存
-                String totalCacheSize = DataCleanManager.getTotalCacheSize(SetupActivity.this);
+                String totalCacheSize = null;
+                try {
+                    totalCacheSize = DataCleanManager.getTotalCacheSize(SetupActivity.this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 tvHuancun.setText(totalCacheSize);
                 dismiss();
             }
