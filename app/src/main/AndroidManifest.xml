@@ -107,6 +107,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <!-- 设置密码 -->
+        <activity
+            android:name=".setpwd.SetPwdActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
         <!-- 忘记密码 -->
         <activity
             android:name=".remember.activity.RememberPwdActivity"
@@ -117,6 +123,8 @@
         <activity
             android:name=".login.activity.LoginActivity"
             android:screenOrientation="portrait">
+
+
         </activity>
 
         <!-- 设置页 -->

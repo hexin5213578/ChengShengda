@@ -14,8 +14,10 @@ import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.login.activity.LoginActivity;
+import com.yidian.chengshengda.regist.bean.CheckPhoneBean;
 import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
 import com.yidian.chengshengda.setpwd.SetPwdActivity;
+import com.yidian.chengshengda.utils.KeyBoardUtils;
 import com.yidian.chengshengda.utils.NetUtils;
 import com.yidian.chengshengda.utils.StringUtil;
 
@@ -59,6 +61,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
     protected BasePresenter initPresenter() {
         return null;
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -98,21 +101,48 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                 }
                 break;
             case R.id.bt_regist:
+                KeyBoardUtils.closeKeyboard(this);
                 String code = etCode.getText().toString();
-                if(StringUtil.checkPhoneNumber(phone)){
                     if(StringUtil.checkSms(code)){
                         //判断输入的验证码与获取的验证码是否一致
                         if(code.equals(auth)){
                             //一致的话跳转到设置密码页
-                            Intent intent = new Intent(RegistActivity.this, SetPwdActivity.class);
-                            intent.putExtra("phone",phone);
-                            startActivity(intent);
+                            NetUtils.getInstance().getApis()
+                                    .doCheckPhone(phone)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Observer<CheckPhoneBean>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(CheckPhoneBean checkPhoneBean) {
+                                            if(checkPhoneBean.getMsg().equals("该手机号未注册！")){
+                                                Intent intent = new Intent(RegistActivity.this, SetPwdActivity.class);
+                                                intent.putExtra("phone",phone);
+                                                startActivity(intent);
+                                            }else{
+                                                Toast.makeText(RegistActivity.this, "该手机号已注册,请去登陆", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+                                    });
 
                         }else{
                             Toast.makeText(this, "验证码输入有误", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
                 break;
         }
     }

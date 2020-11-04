@@ -57,6 +57,20 @@
             android:textColor="@color/color_333333"
             android:layout_height="wrap_content">
         </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="￥200"
+            android:visibility="gone"
+            android:textSize="@dimen/sp_12"
+            android:layout_toRightOf="@id/tv_allprice"
+            android:layout_below="@id/tv_price"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:id="@+id/tv_real_money"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/color_333333"
+            android:layout_height="wrap_content">
+        </TextView>
         <TextView
             android:layout_width="@dimen/dp_59"
             android:text="删除订单"

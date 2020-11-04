@@ -221,31 +221,13 @@
         </View>
         <TextView
             android:layout_width="match_parent"
-            android:text="注销账号"
+            android:text="退出登录"
             android:textSize="@dimen/sp_15"
-            android:id="@+id/tv_zhuxiao"
+            android:id="@+id/tv_cancle"
             android:textColor="#0BA4E9"
             android:layout_below="@id/v5"
             android:gravity="center"
             android:layout_height="@dimen/dp_40">
         </TextView>
-        <View
-            android:layout_width="match_parent"
-            android:layout_below="@id/tv_zhuxiao"
-            android:background="#F2F2F2"
-            android:id="@+id/v6"
-            android:layout_height="@dimen/dp_3">
-        </View>
-        <TextView
-            android:layout_width="match_parent"
-            android:text="退出登录"
-            android:textSize="@dimen/sp_15"
-            android:id="@+id/tv_cancle"
-            android:textColor="#0BA4E9"
-            android:layout_below="@id/v6"
-            android:gravity="center"
-            android:layout_height="@dimen/dp_40">
-        </TextView>
     </RelativeLayout>
-
 </RelativeLayout>

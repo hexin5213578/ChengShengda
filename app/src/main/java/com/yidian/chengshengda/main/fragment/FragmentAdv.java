@@ -1,11 +1,13 @@
 package com.yidian.chengshengda.main.fragment;
 
+import android.os.Build;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -62,6 +64,7 @@ public class FragmentAdv extends BaseFragment implements RadioGroup.OnCheckedCha
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void getData() {
         //设置状态栏颜色与字体颜色
@@ -84,6 +87,7 @@ public class FragmentAdv extends BaseFragment implements RadioGroup.OnCheckedCha
         rbSell.setTextAppearance(R.style.txt_bold);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {

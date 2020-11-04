@@ -32,6 +32,7 @@ import com.liaoinstan.springview.widget.SpringView;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseFragment;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.base.Common;
 import com.yidian.chengshengda.details.SiteDeletails;
 import com.yidian.chengshengda.main.adapter.ShopCarAdapter;
 import com.yidian.chengshengda.main.bean.DeleteShopcarBean;
@@ -84,6 +85,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
     String month = "";
     private PopupWindow mPopupWindow1;
     private String phone;
+    private String userId;
 
     @Override
     protected void getid(View view) {
@@ -111,15 +113,16 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
         btCommit.setOnClickListener(this);
         btDelete.setOnClickListener(this);
 
+        userId = Common.getUserId();
 
         //获取购物车数据
-        getShopCarData(5, i, 15);
+        getShopCarData(Integer.parseInt(userId), i, 15);
 
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
                 i = 1;
-                getShopCarData(5, i, 15);
+                getShopCarData(Integer.parseInt(userId), i, 15);
                 checkAll.setChecked(false);
                 totalPrice = 0;
                 tvAllprice.setText("¥0");
@@ -134,7 +137,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
             @Override
             public void onLoadmore() {
                 i++;
-                getShopCarData(5, i, 15);
+                getShopCarData(Integer.parseInt(userId), i, 15);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -148,8 +151,10 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        getShopCarData(5, i, 15);
+        getShopCarData(Integer.parseInt(userId), i, 15);
         checkAll.setChecked(false);
+        tvAllprice.setText("¥"+0);
+
     }
 
     @Override
@@ -186,7 +191,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
                 String monthstr = month.substring(0,idStr.length()-1);
                 showDialog();
                 NetUtils.getInstance().getApis()
-                        .doAddOrder("http://192.168.10.104:8081/order/insertOrderList",49,str,monthstr)
+                        .doAddOrder(Integer.parseInt(userId),str,monthstr)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<SetPwdBean>() {
@@ -203,7 +208,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
 
                                     // TODO: 2020/10/31 0031 删除购物车里的数据
                                     NetUtils.getInstance().getApis()
-                                            .deleteShopCar("http://192.168.10.104:8081/shopping/deleteModel",2,str)
+                                            .deleteShopCar(Integer.parseInt(userId),str)
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(new Observer<DeleteShopcarBean>() {
@@ -218,6 +223,9 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
                                                     if(deleteShopcarBean.getType().equals("OK")){
                                                         //删除成功刷新页面
                                                         getShopCarData(2,1,15);
+
+                                                        idStr = "";
+                                                        month = "";
                                                     }
                                                 }
 
@@ -259,7 +267,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
                                     mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
                                         @Override
                                         public void onDismiss() {
-                                            setWindowAlpa(false);
+                                            //setWindowAlpa(false);
                                         }
                                     });
                                     show1(view);
@@ -289,7 +297,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
                 Log.e("xxx",str1);
                 // TODO: 2020/10/31 0031 删除购物车里的数据
                 NetUtils.getInstance().getApis()
-                        .deleteShopCar("http://192.168.10.104:8081/shopping/deleteModel",2,str1)
+                        .deleteShopCar(Integer.parseInt(userId),str1)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<DeleteShopcarBean>() {
@@ -300,7 +308,6 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
 
                             @Override
                             public void onNext(DeleteShopcarBean deleteShopcarBean) {
-                                Toast.makeText(getContext(), ""+deleteShopcarBean.getMsg(), Toast.LENGTH_SHORT).show();
                                 if(deleteShopcarBean.getType().equals("OK")){
                                     //删除成功刷新页面
                                     getShopCarData(2,1,15);
@@ -356,7 +363,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
         showDialog();
         // TODO: 2020/10/31 0031 查询购物车
         NetUtils.getInstance().getApis()
-                .getShopCar("http://192.168.10.104:8081/shopping/selectShopping", 2, page, size)
+                .getShopCar(id, page, size)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ShopcarBean>() {
@@ -454,7 +461,7 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
         if (mPopupWindow1 != null && !mPopupWindow1.isShowing()) {
             mPopupWindow1.showAtLocation(v, Gravity.CENTER_HORIZONTAL, 0, 0);
         }
-        setWindowAlpa(true);
+        //setWindowAlpa(true);
     }
 
     /**

@@ -277,7 +277,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
         }
         loading_view.show();
         // TODO: 2020/10/31 0031  获取所有站点信息
-        NetUtils.getInstance().getApis().getAllStation("http://192.168.10.104:8081/station/selStation")
+        NetUtils.getInstance().getApis().getAllStation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AllStationBean>() {

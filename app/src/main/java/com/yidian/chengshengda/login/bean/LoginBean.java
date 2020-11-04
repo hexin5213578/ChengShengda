@@ -3,9 +3,9 @@ package com.yidian.chengshengda.login.bean;
 public class LoginBean {
 
     /**
-     * msg : 返回信息
+     * msg : 登录成功！
      * type : OK
-     * object : {"id":102,"phoneNum":"18738037948","nickName":"张三","headImg":null,"birthday":null,"userType":1,"userRole":null,"isSingle":null,"lng":null,"lat":null,"ratio":null,"createTime":"2020-10-12 10:19:33","countNum":null,"invitationCode":null,"jid":null}
+     * object : {"id":80,"phoneNum":"15652578310","nickName":null,"headImg":null,"password":null,"age":null,"createTime":"2020-11-04 13:16:43"}
      */
 
     private String msg;
@@ -38,38 +38,22 @@ public class LoginBean {
 
     public static class ObjectBean {
         /**
-         * id : 102
-         * phoneNum : 18738037948
-         * nickName : 张三
+         * id : 80
+         * phoneNum : 15652578310
+         * nickName : null
          * headImg : null
-         * birthday : null
-         * userType : 1
-         * userRole : null
-         * isSingle : null
-         * lng : null
-         * lat : null
-         * ratio : null
-         * createTime : 2020-10-12 10:19:33
-         * countNum : null
-         * invitationCode : null
-         * jid : null
+         * password : null
+         * age : null
+         * createTime : 2020-11-04 13:16:43
          */
 
         private int id;
         private String phoneNum;
-        private String nickName;
+        private Object nickName;
         private Object headImg;
-        private Object birthday;
-        private int userType;
-        private Object userRole;
-        private Object isSingle;
-        private double lng;
-        private double lat;
-        private Object ratio;
+        private Object password;
+        private Object age;
         private String createTime;
-        private Object countNum;
-        private Object invitationCode;
-        private Object jid;
 
         public int getId() {
             return id;
@@ -87,11 +71,11 @@ public class LoginBean {
             this.phoneNum = phoneNum;
         }
 
-        public String getNickName() {
+        public Object getNickName() {
             return nickName;
         }
 
-        public void setNickName(String nickName) {
+        public void setNickName(Object nickName) {
             this.nickName = nickName;
         }
 
@@ -103,60 +87,20 @@ public class LoginBean {
             this.headImg = headImg;
         }
 
-        public Object getBirthday() {
-            return birthday;
+        public Object getPassword() {
+            return password;
         }
 
-        public void setBirthday(Object birthday) {
-            this.birthday = birthday;
+        public void setPassword(Object password) {
+            this.password = password;
         }
 
-        public int getUserType() {
-            return userType;
+        public Object getAge() {
+            return age;
         }
 
-        public void setUserType(int userType) {
-            this.userType = userType;
-        }
-
-        public Object getUserRole() {
-            return userRole;
-        }
-
-        public void setUserRole(Object userRole) {
-            this.userRole = userRole;
-        }
-
-        public Object getIsSingle() {
-            return isSingle;
-        }
-
-        public void setIsSingle(Object isSingle) {
-            this.isSingle = isSingle;
-        }
-
-        public double getLng() {
-            return lng;
-        }
-
-        public void setLng(double lng) {
-            this.lng = lng;
-        }
-
-        public double getLat() {
-            return lat;
-        }
-
-        public void setLat(double lat) {
-            this.lat = lat;
-        }
-
-        public Object getRatio() {
-            return ratio;
-        }
-
-        public void setRatio(Object ratio) {
-            this.ratio = ratio;
+        public void setAge(Object age) {
+            this.age = age;
         }
 
         public String getCreateTime() {
@@ -165,30 +109,6 @@ public class LoginBean {
 
         public void setCreateTime(String createTime) {
             this.createTime = createTime;
-        }
-
-        public Object getCountNum() {
-            return countNum;
-        }
-
-        public void setCountNum(Object countNum) {
-            this.countNum = countNum;
-        }
-
-        public Object getInvitationCode() {
-            return invitationCode;
-        }
-
-        public void setInvitationCode(Object invitationCode) {
-            this.invitationCode = invitationCode;
-        }
-
-        public Object getJid() {
-            return jid;
-        }
-
-        public void setJid(Object jid) {
-            this.jid = jid;
         }
     }
 }

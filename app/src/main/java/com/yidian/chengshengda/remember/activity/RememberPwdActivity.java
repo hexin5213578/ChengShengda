@@ -18,6 +18,9 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.base.Common;
+import com.yidian.chengshengda.main.bean.UpdateShopcarMonthBean;
+import com.yidian.chengshengda.regist.bean.GetPhoneCodeBean;
 import com.yidian.chengshengda.utils.NetUtils;
 import com.yidian.chengshengda.utils.StringUtil;
 
@@ -46,6 +49,7 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
     private boolean isplayer =false;
     private String phone;
     private String auth;
+    private String userId;
 
     @Override
     protected int getResId() {
@@ -57,6 +61,7 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
     protected void getData() {
         StatusBarUtil.setTransparentForWindow(this);
 
+        userId = Common.getUserId();
 
         back.setOnClickListener(this);
         tvGetcode.setOnClickListener(this);
@@ -98,7 +103,39 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
                 // TODO: 2020/10/6 0006 调用修改密码接口  修改成功后跳转至登录页
                 String code = etCode.getText().toString();
                 String pwd = etPwd1.getText().toString();
+                if(code.equals(auth)){
+                    //调用修改密码的接口
+                    NetUtils.getInstance().getApis()
+                            .rememberpwd(Integer.parseInt(userId),pwd)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<UpdateShopcarMonthBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
 
+                                }
+
+                                @Override
+                                public void onNext(UpdateShopcarMonthBean updateShopcarMonthBean) {
+                                    if(updateShopcarMonthBean.getType().equals("OK")){
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+
+                }else{
+                    Toast.makeText(this, "验证码输入有误", Toast.LENGTH_SHORT).show();
+                }
                 break;
                 //获取验证码
             case R.id.tv_getcode:
@@ -106,6 +143,34 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
 
                 if(StringUtil.checkPhoneNumber(phone)){
                     countDownTime();
+                    NetUtils.getInstance().getApis()
+                            .getPhoneCode(phone)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<GetPhoneCodeBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(GetPhoneCodeBean getPhoneCodeBean) {
+                                    if(getPhoneCodeBean.getType().equals("OK")){
+                                       auth = getPhoneCodeBean.getObject();
+                                        Toast.makeText(RememberPwdActivity.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
 
                 }
                 break;

@@ -7,7 +7,7 @@ public class OrderInfoBean {
     /**
      * msg : 查找成功
      * type : OK
-     * object : {"total":13,"list":[{"id":79,"userId":49,"money":100,"orderType":2,"createTime":"2020-11-02 16:41:02","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2031-11-02 :04:39:49","stationNum":"22","realMoney":null,"allMoney":null},{"id":80,"userId":49,"money":11600,"orderType":2,"createTime":"2020-11-02 16:42:19","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2030-07-02 :04:41:06","stationNum":"22","realMoney":null,"allMoney":null},{"id":81,"userId":49,"money":8200,"orderType":2,"createTime":"2020-11-02 16:42:37","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2027-09-02 :04:41:24","stationNum":"22","realMoney":null,"allMoney":null},{"id":82,"userId":49,"money":15300,"orderType":2,"createTime":"2020-11-02 16:44:39","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2025-02-02 :04:43:26","stationNum":"26","realMoney":null,"allMoney":null},{"id":83,"userId":49,"money":500,"orderType":3,"createTime":"2020-11-02 16:46:03","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-04-02 :04:44:50","stationNum":"22","realMoney":null,"allMoney":null},{"id":84,"userId":49,"money":600,"orderType":3,"createTime":"2020-11-02 16:47:18","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-05-02 :04:46:05","stationNum":"22","realMoney":null,"allMoney":null},{"id":85,"userId":49,"money":999,"orderType":2,"createTime":"2020-11-02 16:48:33","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-02 :04:47:20","stationNum":"11","realMoney":null,"allMoney":9990},{"id":86,"userId":49,"money":100,"orderType":2,"createTime":"2020-11-02 16:49:08","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-02 :04:47:55","stationNum":"22","realMoney":null,"allMoney":1000},{"id":87,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-02 16:51:23","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2026-06-02 :04:50:10","stationNum":"22","realMoney":null,"allMoney":6700},{"id":88,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 16:53:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-03-02 :04:52:00","stationNum":"11","realMoney":null,"allMoney":3996},{"id":89,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:41","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2020-12-02 :05:02:27","stationNum":"23","realMoney":null,"allMoney":200},{"id":90,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2024-04-02 :05:02:33","stationNum":"23","realMoney":null,"allMoney":8200},{"id":91,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 17:05:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-05-02 :05:04:17","stationNum":"11","realMoney":null,"allMoney":5994}],"pageNum":1,"pageSize":13,"size":13,"startRow":0,"endRow":12,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1}
+     * object : {"total":18,"list":[{"id":88,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 16:53:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-03-02 :04:52:00","stationNum":"11","realMoney":null,"allMoney":3996,"place":"七里生活广场","stationImg":null},{"id":91,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 17:05:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-05-02 :05:04:17","stationNum":"11","realMoney":null,"allMoney":5994,"place":"七里生活广场","stationImg":null},{"id":92,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-03 10:05:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-03 :10:04:31","stationNum":"11","realMoney":null,"allMoney":9990,"place":"七里生活广场","stationImg":null},{"id":111,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-04 09:25:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2025-06-04 :09:24:30","stationNum":"11","realMoney":null,"allMoney":54945,"place":"七里生活广场","stationImg":null},{"id":112,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-04 09:26:11","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-04 :09:24:55","stationNum":"11","realMoney":null,"allMoney":9990,"place":"七里生活广场","stationImg":null},{"id":113,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-04 09:37:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-04 :09:36:14","stationNum":"11","realMoney":null,"allMoney":9990,"place":"七里生活广场","stationImg":null},{"id":93,"userId":49,"money":220,"orderType":1,"createTime":"2020-11-03 10:05:47","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-11-03 :10:04:31","stationNum":"12","realMoney":null,"allMoney":2640,"place":"一尘教育","stationImg":"Public\\Upload\\admin\\2020-11-04\\f61zu39labooekw.jpg,"},{"id":103,"userId":49,"money":220,"orderType":1,"createTime":"2020-11-03 11:38:12","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2022-03-03 :11:36:57","stationNum":"12","realMoney":null,"allMoney":3520,"place":"一尘教育","stationImg":"Public\\Upload\\admin\\2020-11-04\\f61zu39labooekw.jpg,"},{"id":87,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-02 16:51:23","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2026-06-02 :04:50:10","stationNum":"22","realMoney":null,"allMoney":6700,"place":"培风小区","stationImg":null},{"id":104,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-03 11:38:12","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2022-11-03 :11:36:57","stationNum":"22","realMoney":null,"allMoney":2400,"place":"培风小区","stationImg":null},{"id":114,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-04 09:37:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-04-04 :09:36:14","stationNum":"22","realMoney":null,"allMoney":500,"place":"培风小区","stationImg":null},{"id":115,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-04 09:38:58","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2020-12-04 :09:37:42","stationNum":"22","realMoney":null,"allMoney":100,"place":"培风小区","stationImg":null},{"id":89,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:41","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2020-12-02 :05:02:27","stationNum":"23","realMoney":null,"allMoney":200,"place":"成都市第三十七中学","stationImg":null},{"id":90,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2024-04-02 :05:02:33","stationNum":"23","realMoney":null,"allMoney":8200,"place":"成都市第三十七中学","stationImg":null},{"id":109,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-04 09:17:25","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2028-05-04 :09:16:09","stationNum":"23","realMoney":null,"allMoney":18000,"place":"成都市第三十七中学","stationImg":null},{"id":110,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-04 09:17:39","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-04 :09:16:23","stationNum":"23","realMoney":null,"allMoney":2000,"place":"成都市第三十七中学","stationImg":null},{"id":106,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-03 11:38:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2023-11-03 :11:36:57","stationNum":"24","realMoney":null,"allMoney":3600,"place":"爱萌亲子园","stationImg":null},{"id":107,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-03 11:38:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2023-07-03 :11:36:57","stationNum":"25","realMoney":null,"allMoney":3200,"place":"传奇食坊","stationImg":null}],"pageNum":1,"pageSize":18,"size":18,"startRow":0,"endRow":17,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1}
      */
 
     private String msg;
@@ -40,13 +40,13 @@ public class OrderInfoBean {
 
     public static class ObjectBean {
         /**
-         * total : 13
-         * list : [{"id":79,"userId":49,"money":100,"orderType":2,"createTime":"2020-11-02 16:41:02","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2031-11-02 :04:39:49","stationNum":"22","realMoney":null,"allMoney":null},{"id":80,"userId":49,"money":11600,"orderType":2,"createTime":"2020-11-02 16:42:19","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2030-07-02 :04:41:06","stationNum":"22","realMoney":null,"allMoney":null},{"id":81,"userId":49,"money":8200,"orderType":2,"createTime":"2020-11-02 16:42:37","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2027-09-02 :04:41:24","stationNum":"22","realMoney":null,"allMoney":null},{"id":82,"userId":49,"money":15300,"orderType":2,"createTime":"2020-11-02 16:44:39","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2025-02-02 :04:43:26","stationNum":"26","realMoney":null,"allMoney":null},{"id":83,"userId":49,"money":500,"orderType":3,"createTime":"2020-11-02 16:46:03","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-04-02 :04:44:50","stationNum":"22","realMoney":null,"allMoney":null},{"id":84,"userId":49,"money":600,"orderType":3,"createTime":"2020-11-02 16:47:18","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-05-02 :04:46:05","stationNum":"22","realMoney":null,"allMoney":null},{"id":85,"userId":49,"money":999,"orderType":2,"createTime":"2020-11-02 16:48:33","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-02 :04:47:20","stationNum":"11","realMoney":null,"allMoney":9990},{"id":86,"userId":49,"money":100,"orderType":2,"createTime":"2020-11-02 16:49:08","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-02 :04:47:55","stationNum":"22","realMoney":null,"allMoney":1000},{"id":87,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-02 16:51:23","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2026-06-02 :04:50:10","stationNum":"22","realMoney":null,"allMoney":6700},{"id":88,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 16:53:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-03-02 :04:52:00","stationNum":"11","realMoney":null,"allMoney":3996},{"id":89,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:41","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2020-12-02 :05:02:27","stationNum":"23","realMoney":null,"allMoney":200},{"id":90,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2024-04-02 :05:02:33","stationNum":"23","realMoney":null,"allMoney":8200},{"id":91,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 17:05:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-05-02 :05:04:17","stationNum":"11","realMoney":null,"allMoney":5994}]
+         * total : 18
+         * list : [{"id":88,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 16:53:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-03-02 :04:52:00","stationNum":"11","realMoney":null,"allMoney":3996,"place":"七里生活广场","stationImg":null},{"id":91,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-02 17:05:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-05-02 :05:04:17","stationNum":"11","realMoney":null,"allMoney":5994,"place":"七里生活广场","stationImg":null},{"id":92,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-03 10:05:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-03 :10:04:31","stationNum":"11","realMoney":null,"allMoney":9990,"place":"七里生活广场","stationImg":null},{"id":111,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-04 09:25:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2025-06-04 :09:24:30","stationNum":"11","realMoney":null,"allMoney":54945,"place":"七里生活广场","stationImg":null},{"id":112,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-04 09:26:11","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-04 :09:24:55","stationNum":"11","realMoney":null,"allMoney":9990,"place":"七里生活广场","stationImg":null},{"id":113,"userId":49,"money":999,"orderType":1,"createTime":"2020-11-04 09:37:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-04 :09:36:14","stationNum":"11","realMoney":null,"allMoney":9990,"place":"七里生活广场","stationImg":null},{"id":93,"userId":49,"money":220,"orderType":1,"createTime":"2020-11-03 10:05:47","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-11-03 :10:04:31","stationNum":"12","realMoney":null,"allMoney":2640,"place":"一尘教育","stationImg":"Public\\Upload\\admin\\2020-11-04\\f61zu39labooekw.jpg,"},{"id":103,"userId":49,"money":220,"orderType":1,"createTime":"2020-11-03 11:38:12","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2022-03-03 :11:36:57","stationNum":"12","realMoney":null,"allMoney":3520,"place":"一尘教育","stationImg":"Public\\Upload\\admin\\2020-11-04\\f61zu39labooekw.jpg,"},{"id":87,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-02 16:51:23","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2026-06-02 :04:50:10","stationNum":"22","realMoney":null,"allMoney":6700,"place":"培风小区","stationImg":null},{"id":104,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-03 11:38:12","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2022-11-03 :11:36:57","stationNum":"22","realMoney":null,"allMoney":2400,"place":"培风小区","stationImg":null},{"id":114,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-04 09:37:30","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-04-04 :09:36:14","stationNum":"22","realMoney":null,"allMoney":500,"place":"培风小区","stationImg":null},{"id":115,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-04 09:38:58","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2020-12-04 :09:37:42","stationNum":"22","realMoney":null,"allMoney":100,"place":"培风小区","stationImg":null},{"id":89,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:41","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2020-12-02 :05:02:27","stationNum":"23","realMoney":null,"allMoney":200,"place":"成都市第三十七中学","stationImg":null},{"id":90,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-02 17:03:46","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2024-04-02 :05:02:33","stationNum":"23","realMoney":null,"allMoney":8200,"place":"成都市第三十七中学","stationImg":null},{"id":109,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-04 09:17:25","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2028-05-04 :09:16:09","stationNum":"23","realMoney":null,"allMoney":18000,"place":"成都市第三十七中学","stationImg":null},{"id":110,"userId":49,"money":200,"orderType":1,"createTime":"2020-11-04 09:17:39","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2021-09-04 :09:16:23","stationNum":"23","realMoney":null,"allMoney":2000,"place":"成都市第三十七中学","stationImg":null},{"id":106,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-03 11:38:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2023-11-03 :11:36:57","stationNum":"24","realMoney":null,"allMoney":3600,"place":"爱萌亲子园","stationImg":null},{"id":107,"userId":49,"money":100,"orderType":1,"createTime":"2020-11-03 11:38:13","nickName":"洋洋啊","phoneNum":"1888433236","endTime":"2023-07-03 :11:36:57","stationNum":"25","realMoney":null,"allMoney":3200,"place":"传奇食坊","stationImg":null}]
          * pageNum : 1
-         * pageSize : 13
-         * size : 13
+         * pageSize : 18
+         * size : 18
          * startRow : 0
-         * endRow : 12
+         * endRow : 17
          * pages : 1
          * prePage : 0
          * nextPage : 0
@@ -225,17 +225,19 @@ public class OrderInfoBean {
 
         public static class ListBean {
             /**
-             * id : 79
+             * id : 88
              * userId : 49
-             * money : 100.0
-             * orderType : 2
-             * createTime : 2020-11-02 16:41:02
+             * money : 999.0
+             * orderType : 1
+             * createTime : 2020-11-02 16:53:13
              * nickName : 洋洋啊
              * phoneNum : 1888433236
-             * endTime : 2031-11-02 :04:39:49
-             * stationNum : 22
+             * endTime : 2021-03-02 :04:52:00
+             * stationNum : 11
              * realMoney : null
-             * allMoney : null
+             * allMoney : 3996.0
+             * place : 七里生活广场
+             * stationImg : null
              */
 
             private int id;
@@ -248,7 +250,9 @@ public class OrderInfoBean {
             private String endTime;
             private String stationNum;
             private Object realMoney;
-            private Object allMoney;
+            private double allMoney;
+            private String place;
+            private String stationImg;
 
             public int getId() {
                 return id;
@@ -330,12 +334,28 @@ public class OrderInfoBean {
                 this.realMoney = realMoney;
             }
 
-            public Object getAllMoney() {
+            public double getAllMoney() {
                 return allMoney;
             }
 
-            public void setAllMoney(Object allMoney) {
+            public void setAllMoney(double allMoney) {
                 this.allMoney = allMoney;
+            }
+
+            public String getPlace() {
+                return place;
+            }
+
+            public void setPlace(String place) {
+                this.place = place;
+            }
+
+            public String getStationImg() {
+                return stationImg;
+            }
+
+            public void setStationImg(String stationImg) {
+                this.stationImg = stationImg;
             }
         }
     }

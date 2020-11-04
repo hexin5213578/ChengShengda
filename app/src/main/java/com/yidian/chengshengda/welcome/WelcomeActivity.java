@@ -59,11 +59,11 @@ public class WelcomeActivity extends BaseAvtivity {
             @Override
             public void onClick(View v) {
                 isLogin = SPUtil.getInstance().getData(WelcomeActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN);
-                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivity(intent);
-              /*  if(isLogin !=null){
-                    if(isLogin.equals("0")){
 
+                if(isLogin !=null){
+                    if(isLogin.equals("0")){
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        startActivity(intent);
                         finish();
                     }else{
                         Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
@@ -74,12 +74,12 @@ public class WelcomeActivity extends BaseAvtivity {
                     Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
-                }*/
+                }
             }
         });
 
 
-       /* Handler handler = new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -102,7 +102,7 @@ public class WelcomeActivity extends BaseAvtivity {
                 }
 
             }
-        }, 2000);//2秒后执行Runnable中的run方法*/
+        }, 2000);//2秒后执行Runnable中的run方法
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.base.Common;
 import com.yidian.chengshengda.setpwd.bean.SetPwdBean;
 import com.yidian.chengshengda.utils.NetUtils;
 
@@ -38,6 +39,7 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
     EditText etNewPwd2;
     @BindView(R.id.bt_confirm)
     Button btConfirm;
+    private String userId;
 
     @Override
     protected int getResId() {
@@ -51,6 +53,9 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
         StatusBarUtil.setDarkMode(this);
         back.setOnClickListener(this);
         btConfirm.setOnClickListener(this);
+
+        userId = Common.getUserId();
+
     }
 
     @Override
@@ -72,7 +77,7 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
                 if(pwd1.equals(pwd2)){
                     //发起网络请求
                     NetUtils.getInstance().getApis()
-                            .doSetPwd("http://192.168.10.104:8081/userInfo/updatePassword",49,oldpwd,pwd1)
+                            .doSetPwd(Integer.parseInt(userId),oldpwd,pwd1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<SetPwdBean>() {

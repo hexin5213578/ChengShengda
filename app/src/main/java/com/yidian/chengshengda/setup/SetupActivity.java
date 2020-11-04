@@ -11,6 +11,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -53,6 +55,8 @@ import com.yidian.chengshengda.utils.SPUtil;
 import org.lym.image.select.PictureSelector;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,8 +84,6 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
     TextView tvBanben;
     @BindView(R.id.rl_banben)
     RelativeLayout rlBanben;
-    @BindView(R.id.tv_zhuxiao)
-    TextView tvZhuxiao;
     @BindView(R.id.tv_cancle)
     TextView tvCancle;
     @BindView(R.id.toolbar)
@@ -111,7 +113,6 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         rlSetPwd.setOnClickListener(this);
         rlClean.setOnClickListener(this);
         rlBanben.setOnClickListener(this);
-        tvZhuxiao.setOnClickListener(this);
         tvCancle.setOnClickListener(this);
         title.setText("设置");
 
@@ -141,12 +142,12 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
         }
         tvHuancun.setText(totalCacheSize);
 
-        //id = Integer.valueOf(Common.getUserId());
+        id = Integer.valueOf(Common.getUserId());
 
         //获取用户信息
         showDialog();
         NetUtils.getInstance().getApis()
-                .getUserInfo("http://192.168.10.104:8081/user/selectUserInfoByIdx",49)
+                .getUserInfo(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserInfoBean>() {
@@ -246,11 +247,6 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             case R.id.rl_banben:
                 // TODO: 2020/10/21 0021 跳转到版本页
                 break;
-            //注销账号
-            case R.id.tv_zhuxiao:
-                // TODO: 2020/10/28 0028 调用注销账号接口
-
-                break;
             //退出登录
             case R.id.tv_cancle:
                 //清除登录信息 返回登录页
@@ -274,7 +270,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
                 // TODO: 2020/10/28 0028 上传到服务器
                 showDialog();
-                NetUtils.getInstance().getApis().doSetHeadImg("http://192.168.10.104:8081/userInfo/updateUserInfo",49,path)
+                NetUtils.getInstance().getApis().doSetHeadImg(id,path)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<SetPwdBean>() {
@@ -307,7 +303,39 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             }
         }
     }
+    /**
+     * 禁止EditText输入空格
+     * @param editText
+     */
+    public static void setEditTextInhibitInputSpace(EditText editText){
+        InputFilter filter=new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if(source.equals(" "))return "";
+                else return null;
+            }
+        };
+        editText.setFilters(new InputFilter[]{filter});
+    }
 
+    /**
+     * 禁止EditText输入特殊字符
+     * @param editText
+     */
+    public static void setEditTextInhibitInputSpeChat(EditText editText){
+
+        InputFilter filter=new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                String speChat="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+                Pattern pattern = Pattern.compile(speChat);
+                Matcher matcher = pattern.matcher(source.toString());
+                if(matcher.find())return "";
+                else return null;
+            }
+        };
+        editText.setFilters(new InputFilter[]{filter});
+    }
     // 弹出选择规格
     public void showSelect() {
         //创建popwiondow弹出框
@@ -321,6 +349,10 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
         //将用户名 回显到输入框
         et_name.setText(tvName.getText().toString());
+
+        //禁止输入特殊字符及空格
+        setEditTextInhibitInputSpace(et_name);
+        setEditTextInhibitInputSpeChat(et_name);
 
         //文本输入前 获取长度赋值给长度计算
         int length = et_name.getText().length();
@@ -361,7 +393,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
                     showDialog();
                     NetUtils.getInstance().getApis()
-                            .dosetNikeName("http://192.168.10.104:8081/userInfo/updateUserInfo",49,s)
+                            .dosetNikeName(id,s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<SetPwdBean>() {

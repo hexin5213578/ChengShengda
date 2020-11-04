@@ -2,9 +2,12 @@ package com.yidian.chengshengda.main.fragment;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +28,8 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseFragment;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.base.Common;
+import com.yidian.chengshengda.main.fragment.order.FragmentExam;
 import com.yidian.chengshengda.main.fragment.order.FragmentFailed;
 import com.yidian.chengshengda.main.fragment.order.FragmentFinished;
 import com.yidian.chengshengda.main.fragment.order.FragmentLeased;
@@ -35,6 +40,8 @@ import com.yidian.chengshengda.utils.NetUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
@@ -57,6 +64,7 @@ public class FragmentMine extends BaseFragment {
     TextView tvName;
     private List<String> tabs = new ArrayList<>();
     List<Fragment> fragments = new ArrayList<>();
+    private String userId;
 
     @Override
     protected void getid(View view) {
@@ -80,18 +88,22 @@ public class FragmentMine extends BaseFragment {
         StatusBarUtil.setGradientColor(getActivity(), toolbar);
         StatusBarUtil.setDarkMode(getActivity());
 
+        tabs.add("审核中");
         tabs.add("租赁中");
         tabs.add("已失败");
         tabs.add("已结束");
         tab.addTab(tab.newTab().setText(tabs.get(0)));
         tab.addTab(tab.newTab().setText(tabs.get(1)));
         tab.addTab(tab.newTab().setText(tabs.get(2)));
-
+        tab.addTab(tab.newTab().setText(tabs.get(3)));
+        userId = Common.getUserId();
 
         FragmentLeased fragmentLeased = new FragmentLeased();
         FragmentFailed fragmentFailed = new FragmentFailed();
         FragmentFinished fragmentFinished = new FragmentFinished();
+        FragmentExam fragmentExam = new FragmentExam();
 
+        fragments.add(fragmentExam);
         fragments.add(fragmentLeased);
         fragments.add(fragmentFailed);
         fragments.add(fragmentFinished);
@@ -106,13 +118,13 @@ public class FragmentMine extends BaseFragment {
         });
 
         //设置基本信息
-        getUserInfo(1);
+        getUserInfo(Integer.parseInt(userId));
 
         //设置tab的长度
         tab.post(new Runnable() {
             @Override
             public void run() {
-                setIndicator(tab, 35, 35);
+                setIndicator(tab, 25, 25);
             }
         });
         //设置tab监听
@@ -209,7 +221,7 @@ public class FragmentMine extends BaseFragment {
     public void onResume() {
         super.onResume();
         Log.e("xxx","onResume()");
-        getUserInfo(1);
+        getUserInfo(Integer.parseInt(userId));
     }
 
     @Override
@@ -229,7 +241,7 @@ public class FragmentMine extends BaseFragment {
         //获取用户信息
         showDialog();
         NetUtils.getInstance().getApis()
-                .getUserInfo("http://192.168.10.104:8081/user/selectUserInfoByIdx",49)
+                .getUserInfo(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserInfoBean>() {

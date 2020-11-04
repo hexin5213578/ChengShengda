@@ -41,6 +41,7 @@ import com.leaf.library.StatusBarUtil;
 import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
+import com.yidian.chengshengda.base.Common;
 import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.details.adapter.HisLeaseAdapter;
 import com.yidian.chengshengda.details.bean.StationDetailsBean;
@@ -104,6 +105,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
     private PopupWindow mPopupWindow1;
     private String id;
     private String phone;
+    private String userId;
 
     @Override
     protected int getResId() {
@@ -124,11 +126,14 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
         Intent intent =
                 getIntent();
         id = intent.getStringExtra("id");
+
+        userId = Common.getUserId();
+
         //获取对应id下的站点详情
         showDialog();
         // TODO: 2020/10/31 0031 根据ID查询站点详情
         NetUtils.getInstance().getApis()
-                .getStationDetails("http://192.168.10.104:8081/station/selectStation", id)
+                .getStationDetails(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StationDetailsBean>() {
@@ -406,7 +411,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     //调用加入购物车的接口
                     showDialog();
                     // TODO: 2020/10/31 0031 加入购物车
-                    NetUtils.getInstance().getApis().joinShopcar("http://192.168.10.104:8081/shopping/insertModel", 2, Integer.valueOf(id), count)
+                    NetUtils.getInstance().getApis().joinShopcar(Integer.parseInt(userId), Integer.valueOf(id), count)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<SaveShopCarBean>() {
@@ -441,7 +446,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                     //提交
                     showDialog();
                     NetUtils.getInstance().getApis()
-                            .doAddOrder("http://192.168.10.104:8081/order/insertOrderList",49,id,String.valueOf(count))
+                            .doAddOrder(Integer.parseInt(userId),id,String.valueOf(count))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<SetPwdBean>() {

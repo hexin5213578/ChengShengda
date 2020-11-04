@@ -17,4 +17,12 @@
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.core.widget.NestedScrollView>
     </com.liaoinstan.springview.widget.SpringView>
+    <ImageView
+        android:layout_width="@dimen/dp_152"
+        android:src="@mipmap/noshopcar"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:id="@+id/iv_noorder"
+        android:layout_height="@dimen/dp_167">
+    </ImageView>
 </RelativeLayout>

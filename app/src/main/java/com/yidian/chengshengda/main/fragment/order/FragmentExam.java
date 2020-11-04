@@ -14,14 +14,9 @@ import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.base.BaseFragment;
 import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.base.Common;
-import com.yidian.chengshengda.main.fragment.order.adapter.FinishOrderAdapter;
+import com.yidian.chengshengda.main.fragment.order.adapter.ExamOrderAdapte;
 import com.yidian.chengshengda.main.fragment.order.bean.OrderInfoBean;
-import com.yidian.chengshengda.main.fragment.order.bean.SaveDeleteBean;
 import com.yidian.chengshengda.utils.NetUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -31,16 +26,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class FragmentFailed extends BaseFragment {
+//审核中订单
+public class FragmentExam extends BaseFragment {
     @BindView(R.id.rc_order)
     RecyclerView rcOrder;
     @BindView(R.id.sv)
     SpringView sv;
     @BindView(R.id.iv_noorder)
     ImageView ivNoorder;
-    private FinishOrderAdapter finishOrderAdapter;
-    int id;
     int page = 1;
+    private String id;
+
     @Override
     protected void getid(View view) {
 
@@ -48,7 +44,7 @@ public class FragmentFailed extends BaseFragment {
 
     @Override
     protected int getResId() {
-        return R.layout.fragment_order_failed;
+        return R.layout.fragment_order_exam;
     }
 
     @Override
@@ -59,16 +55,15 @@ public class FragmentFailed extends BaseFragment {
     @Override
     protected void getData() {
         sv.setHeader(new AliHeader(getContext()));
+        id = Common.getUserId();
 
-        id = Integer.parseInt(Common.getUserId());
-
-        getOrderInfo(id,page,15);
+        getOrderInfo(Integer.parseInt(id),page,15);
         //刷新监听
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
                 page=1;
-                getOrderInfo(id,page,15);
+                getOrderInfo(Integer.parseInt(id),page,15);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -80,7 +75,7 @@ public class FragmentFailed extends BaseFragment {
             @Override
             public void onLoadmore() {
                 page++;
-                getOrderInfo(id,page,15);
+                getOrderInfo(Integer.parseInt(id),page,15);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -93,7 +88,7 @@ public class FragmentFailed extends BaseFragment {
     //获取订单信息
     public void getOrderInfo(int id,int page,int size){
         NetUtils.getInstance().getApis()
-                .getOrderInfo(id,3,page,size)
+                .getOrderInfo(id,0,page,size)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<OrderInfoBean>() {
@@ -114,8 +109,8 @@ public class FragmentFailed extends BaseFragment {
                             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                             rcOrder.setLayoutManager(linearLayoutManager);
 
-                            finishOrderAdapter = new FinishOrderAdapter(getContext(), list);
-                            rcOrder.setAdapter(finishOrderAdapter);
+                            ExamOrderAdapte examOrder = new ExamOrderAdapte(getContext(), list);
+                            rcOrder.setAdapter(examOrder);
 
                         }else{
                             sv.setVisibility(View.GONE);
@@ -136,31 +131,5 @@ public class FragmentFailed extends BaseFragment {
 
                     }
                 });
-    }
-    //接受删除回调
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getDelete(SaveDeleteBean saveDeleteBean){
-        String delete = saveDeleteBean.getDelete();
-        if(delete.equals("删除成功")){
-            //刷新适配器
-            getOrderInfo(id,page,15);
-            finishOrderAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(!EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().unregister(this);
-        }
     }
 }
