@@ -27,20 +27,23 @@
             android:textColor="@color/color_333333"
             android:layout_toRightOf="@id/iv_img"
             android:id="@+id/tv_sites_distance"
+            android:textStyle="bold"
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_10"
-            android:layout_height="@dimen/dp_15">
+            android:layout_height="wrap_content">
         </TextView>
         <TextView
-            android:layout_width="@dimen/dp_59"
+            android:layout_width="wrap_content"
             android:layout_toRightOf="@id/iv_img"
             android:text="200元/月"
             android:background="@drawable/order_item_tv_bg"
             android:textColor="@color/color_999999"
             android:textSize="@dimen/sp_10"
             android:gravity="center"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
             android:id="@+id/tv_price"
-            android:layout_below="@id/tv_sites_distance"
+            android:layout_centerVertical="true"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_height="@dimen/dp_15">
@@ -49,10 +52,10 @@
             android:layout_width="wrap_content"
             android:text="￥200"
             android:textSize="@dimen/sp_12"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_8"
             android:layout_toRightOf="@id/iv_img"
-            android:layout_below="@id/tv_price"
             android:id="@+id/tv_allprice"
-            android:layout_marginTop="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_10"
             android:textColor="@color/color_333333"
             android:layout_height="wrap_content">
@@ -64,24 +67,26 @@
             android:visibility="gone"
             android:textSize="@dimen/sp_12"
             android:layout_toRightOf="@id/tv_allprice"
-            android:layout_below="@id/tv_price"
             android:layout_marginLeft="@dimen/dp_10"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
             android:id="@+id/tv_real_money"
-            android:layout_marginTop="@dimen/dp_10"
             android:textColor="@color/color_333333"
             android:layout_height="wrap_content">
         </TextView>
         <TextView
-            android:layout_width="@dimen/dp_59"
+            android:layout_width="wrap_content"
             android:text="删除订单"
             android:textSize="@dimen/sp_10"
             android:gravity="center"
             android:id="@+id/tv_deleteorder"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
             android:textColor="@color/white"
             android:background="@drawable/order_item_tv_bg2"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_height="@dimen/dp_19">
         </TextView>

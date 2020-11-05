@@ -5,7 +5,7 @@
         android:layout_width="@dimen/dp_245"
         android:layout_centerInParent="true"
         android:background="@drawable/dialog_phone_bg"
-        android:layout_height="@dimen/dp_99">
+        android:layout_height="@dimen/dp_119">
         <LinearLayout
             android:id="@+id/l1"
             android:layout_width="wrap_content"

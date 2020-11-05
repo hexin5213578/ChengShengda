@@ -35,7 +35,7 @@
                 android:maxEms="3"
                 android:ellipsize="end"
                 android:textColor="#0BA4E9"
-                android:textSize="@dimen/sp_15"></TextView>
+                android:textSize="@dimen/sp_12"></TextView>
 
             <TextView
                 android:id="@+id/tv_weather"
@@ -102,8 +102,8 @@
     <RelativeLayout
         android:id="@+id/rl_dialog"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
         android:visibility="gone"
+        android:layout_height="@dimen/dp_50"
         android:layout_alignParentBottom="true"
         android:background="@drawable/dialog_select_bg">
 
@@ -114,26 +114,26 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_6"
             android:text="清华园"
-            android:maxEms="15"
+            android:maxEms="10"
             android:singleLine="true"
             android:ellipsize="end"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_13"
             android:textStyle="bold"></TextView>
 
         <TextView
             android:id="@+id/tv_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_name"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_3"
-            android:maxEms="15"
+            android:maxEms="10"
             android:singleLine="true"
             android:ellipsize="end"
             android:text="长虹大道南段奥术大师多"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_12"></TextView>
+            android:textSize="@dimen/sp_10"></TextView>
 
         <Button
             android:id="@+id/bt_arrive"

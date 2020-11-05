@@ -139,10 +139,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
         //注册微信
         initWX();
 
-
         //腾讯AppId(替换你自己App Id)、上下文
         mTencent = Tencent.createInstance("101913220", this);
-
     }
 
     @Override
@@ -170,6 +168,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                 String pwd = etPwd1.getText().toString();
                 if (StringUtil.checkPhoneNumber(phone)) {
                     if (StringUtil.checkPassword(pwd)) {
+                        showDialog();
                             NetUtils.getInstance().getApis().doPwdLogin(phone, pwd, 1)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
@@ -181,6 +180,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                                         @Override
                                         public void onNext(LoginBean loginBean) {
+                                            hideDialog();
                                             String type = loginBean.getType();
                                             Toast.makeText(LoginActivity.this, ""+loginBean.getMsg(), Toast.LENGTH_SHORT).show();
                                             if(type.equals("OK")){
@@ -199,7 +199,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                         }
                                         @Override
                                         public void onError(Throwable e) {
-
+                                            hideDialog();
+                                            Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                                         }
                                         @Override
                                         public void onComplete() {
@@ -211,19 +212,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                 break;
             case R.id.rl_qq_login:
                 //QQ登录
-
-                    //注意：此段非必要，如果手机未安装应用则会跳转网页进行授权
-                    if (!hasApp(LoginActivity.this, PACKAGE_QQ)) {
-                        Toast.makeText(LoginActivity.this, "未安装QQ应用",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }else{
-                        doQlogin();
-                    }
-                    //如果session无效，就开始做登录操作
-                    if (!mTencent.isSessionValid()) {
-                        doQlogin();
-                }
+                    doQlogin();
                 break;
             case R.id.rl_wechat_login:
                     doWechatLogin();
@@ -276,6 +265,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
             SPUtil.getInstance().saveData(LoginActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN, "0");
 
             //调用微信登录接口
+            showDialog();
             NetUtils.getInstance().getApis().doWechatLogin(2,wxOpenId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -287,6 +277,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                         @Override
                         public void onNext(LoginBean loginBean) {
+                            hideDialog();
                             Toast.makeText(LoginActivity.this, ""+loginBean.getMsg(), Toast.LENGTH_SHORT).show();
 
                             if (loginBean.getType().equals("OK")) {
@@ -301,7 +292,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                         @Override
                         public void onError(Throwable e) {
-
+                            hideDialog();
+                            Toast.makeText(LoginActivity.this, "微信登录失败", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -418,6 +410,9 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                                         //将登录状态改为已经登录
                                         SPUtil.getInstance().saveData(LoginActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN, "0");
+
+
+                                        //将获取到的头像 网名 存入个人资料
                                         NetUtils.getInstance().getApis()
                                                 .doSetHeadImg(loginBean.getObject().getId(),avatar)
                                                 .subscribeOn(Schedulers.io())
@@ -475,7 +470,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    hideDialog();
+                                    Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override

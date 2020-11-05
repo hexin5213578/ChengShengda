@@ -2,6 +2,7 @@ package com.yidian.chengshengda.main.fragment.order.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class ExamOrderAdapte extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         OrderInfoBean.ObjectBean.ListBean listBean = list.get(position);
         ((ViewHolder)holder).tvName.setText(listBean.getPlace());
+
         int allMoney = (int) listBean.getAllMoney();
         ((ViewHolder)holder).allMoney.setText("￥"+allMoney);
         ((ViewHolder)holder).tvPrice.setText(listBean.getMoney()+"元/月");

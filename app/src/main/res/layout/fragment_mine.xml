@@ -23,15 +23,20 @@
             android:layout_centerHorizontal="true"
             android:layout_height="@dimen/dp_48">
         </ImageView>
-        <ImageView
-            android:layout_width="@dimen/dp_15"
-            android:src="@mipmap/setup"
+        <LinearLayout
+            android:layout_width="@dimen/dp_50"
+            android:gravity="right"
             android:id="@+id/iv_setup"
-            android:layout_marginTop="@dimen/dp_24"
-            android:layout_marginRight="@dimen/dp_15"
             android:layout_alignParentRight="true"
-            android:layout_height="@dimen/dp_15">
-        </ImageView>
+            android:layout_height="@dimen/dp_50">
+            <ImageView
+                android:layout_width="@dimen/dp_15"
+                android:src="@mipmap/setup"
+                android:layout_marginTop="@dimen/dp_24"
+                android:layout_marginRight="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15">
+            </ImageView>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/dp_14"
@@ -43,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:text="偏爱"
                 android:textColor="#FFFFFF"
+                android:textStyle="bold"
                 android:id="@+id/tv_name"
                 android:textSize="@dimen/sp_18"
                 android:layout_height="wrap_content">
@@ -53,15 +59,10 @@
         android:layout_width="match_parent"
         android:layout_below="@id/rl_top"
         android:id="@+id/tab"
-
         app:tabIndicatorHeight="@dimen/dp_1"
-
         app:tabTextAppearance="@style/TabLayoutTextUnSelected"
-
         app:tabIndicatorColor="@color/color_0BA4E9"
-
         app:tabRippleColor="@android:color/transparent"
-
         android:layout_height="@dimen/dp_50">
     </com.google.android.material.tabs.TabLayout>
     <androidx.viewpager.widget.ViewPager

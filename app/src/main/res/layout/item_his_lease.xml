@@ -35,14 +35,13 @@
         </TextView>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_below="@id/tv_sites_distance"
             android:layout_toRightOf="@id/iv_img"
             android:layout_marginLeft="@dimen/dp_10"
             android:text="租赁商家"
             android:textSize="@dimen/sp_10"
             android:textColor="@color/color_333333"
+            android:layout_centerVertical="true"
             android:id="@+id/tv_business"
-            android:layout_marginTop="@dimen/dp_7"
             android:layout_height="wrap_content">
         </TextView>
         <TextView
@@ -81,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:text="2020-01-10"
                 android:textSize="@dimen/sp_10"
+                android:maxLength="10"
                 android:textColor="@color/white"
                 android:id="@+id/tv_time"
                 android:layout_height="wrap_content">

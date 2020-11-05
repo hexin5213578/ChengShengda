@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:text="柘城县"
-                    android:textSize="@dimen/sp_15"
+                    android:textSize="@dimen/sp_13"
                     android:layout_gravity="center"
                     android:maxEms="3"
                     android:singleLine="true"
@@ -86,7 +86,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:text="重庆市"
-                    android:textSize="@dimen/sp_15"
+                    android:textSize="@dimen/sp_13"
                     android:layout_gravity="center"
                     android:maxLength="3"
                     android:ellipsize="end"

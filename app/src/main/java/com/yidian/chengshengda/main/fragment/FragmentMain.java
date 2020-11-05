@@ -380,7 +380,7 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
 
             //设置定位参数
-            mLocationOption.setInterval(500000);
+            mLocationOption.setOnceLocation(true);
 
             mlocationClient.setLocationOption(mLocationOption);
             // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，

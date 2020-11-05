@@ -17,6 +17,7 @@ import com.yidian.chengshengda.base.BaseAvtivity;
 import com.yidian.chengshengda.base.BasePresenter;
 import com.yidian.chengshengda.base.Common;
 import com.yidian.chengshengda.setpwd.bean.SetPwdBean;
+import com.yidian.chengshengda.utils.KeyBoardUtils;
 import com.yidian.chengshengda.utils.NetUtils;
 
 import butterknife.BindView;
@@ -70,12 +71,16 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.bt_confirm:
+
+                KeyBoardUtils.closeKeyboard(ChangePwdActivity.this);
+
                 //获取密码校验完毕后 发起更改密码的网络请求
                 String oldpwd = etOldPwd.getText().toString();
                 String pwd1 = etNewPwd.getText().toString();
                 String pwd2 = etNewPwd2.getText().toString();
                 if(pwd1.equals(pwd2)){
                     //发起网络请求
+                    showDialog();
                     NetUtils.getInstance().getApis()
                             .doSetPwd(Integer.parseInt(userId),oldpwd,pwd1)
                             .subscribeOn(Schedulers.io())
@@ -88,12 +93,20 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
 
                                 @Override
                                 public void onNext(SetPwdBean setPwdBean) {
+                                    hideDialog();
+                                    if (setPwdBean.getType().equals("OK")){
+                                        Toast.makeText(ChangePwdActivity.this, "密码修改成功", Toast.LENGTH_SHORT).show();
 
+                                        finish();
+
+                                    }else{
+                                        Toast.makeText(ChangePwdActivity.this, ""+setPwdBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    hideDialog();
                                 }
 
                                 @Override

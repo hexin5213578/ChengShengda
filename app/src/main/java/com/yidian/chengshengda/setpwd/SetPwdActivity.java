@@ -147,7 +147,8 @@ public class SetPwdActivity extends BaseAvtivity implements View.OnClickListener
                                     public void onNext(RegistBean registBean) {
                                         if(registBean.getType().equals("OK")){
                                          //判断注册成功调用登录接口
-                                                NetUtils.getInstance().getApis().doPwdLogin(phone, pwd1, 1)
+                                            showDialog();
+                                            NetUtils.getInstance().getApis().doPwdLogin(phone, pwd1, 1)
                                                         .subscribeOn(Schedulers.io())
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Observer<LoginBean>() {
@@ -157,6 +158,7 @@ public class SetPwdActivity extends BaseAvtivity implements View.OnClickListener
                                                             }
                                                             @Override
                                                             public void onNext(LoginBean loginBean) {
+                                                                hideDialog();
                                                                 Toast.makeText(SetPwdActivity.this, ""+loginBean.getMsg(), Toast.LENGTH_SHORT).show();
                                                                 String type = loginBean.getType();
                                                                 if(type.equals("OK")){
@@ -174,7 +176,8 @@ public class SetPwdActivity extends BaseAvtivity implements View.OnClickListener
                                                             }
                                                             @Override
                                                             public void onError(Throwable e) {
-
+                                                                hideDialog();
+                                                                Toast.makeText(SetPwdActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                                                             }
                                                             @Override
                                                             public void onComplete() {

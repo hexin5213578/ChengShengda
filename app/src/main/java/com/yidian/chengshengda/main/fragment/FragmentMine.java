@@ -2,6 +2,7 @@ package com.yidian.chengshengda.main.fragment;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class FragmentMine extends BaseFragment {
     @BindView(R.id.iv_headimg)
     ImageView ivHeadimg;
     @BindView(R.id.iv_setup)
-    ImageView ivSetup;
+    LinearLayout ivSetup;
     @BindView(R.id.tv_name)
     TextView tvName;
     private List<String> tabs = new ArrayList<>();
@@ -260,7 +261,7 @@ public class FragmentMine extends BaseFragment {
                             String headImg = object.getHeadImg();
                             if(headImg==null || headImg.equals("")){
                                 //头像为空  设置默认头像
-                                Glide.with(getActivity()).load(R.mipmap.head).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                                Glide.with(getActivity()).load(R.mipmap.headimg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
                             }else{
                                 //加载头像
                                 Glide.with(getActivity()).load(headImg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);

@@ -50,7 +50,30 @@ public class WelcomeActivity extends BaseAvtivity {
             {
                 ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
             }else{
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isLogin = SPUtil.getInstance().getData(WelcomeActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN);
 
+                        if(isLogin !=null){
+                            if(isLogin.equals("0")){
+                                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }else{
+                                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }else{
+                            Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                    }
+                }, 1500);//2秒后执行Runnable中的run方法
             }
         }
 
@@ -79,30 +102,7 @@ public class WelcomeActivity extends BaseAvtivity {
         });
 
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isLogin = SPUtil.getInstance().getData(WelcomeActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN);
 
-                if(isLogin !=null){
-                    if(isLogin.equals("0")){
-                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }else{
-                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-            }
-        }, 2000);//2秒后执行Runnable中的run方法
     }
 
     @Override
@@ -119,7 +119,32 @@ public class WelcomeActivity extends BaseAvtivity {
         if(requestCode==100){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(WelcomeActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isLogin = SPUtil.getInstance().getData(WelcomeActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN);
+
+                        if(isLogin !=null){
+                            if(isLogin.equals("0")){
+                                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }else{
+                                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }else{
+                            Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                    }
+                }, 1500);//2秒后执行Runnable中的run方法
+
             } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(WelcomeActivity.this, "权限申请失败，用户拒绝权限", Toast.LENGTH_SHORT).show();
             }

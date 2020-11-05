@@ -166,7 +166,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                             String headImg = object.getHeadImg();
                             if(headImg==null || headImg.equals("")){
                                 //头像为空  设置默认头像
-                                Glide.with(SetupActivity.this).load(R.mipmap.head).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                                Glide.with(SetupActivity.this).load(R.mipmap.headimg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
                             }else{
                                 //加载头像
                                 Glide.with(SetupActivity.this).load(headImg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);

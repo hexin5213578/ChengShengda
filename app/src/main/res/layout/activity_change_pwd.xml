@@ -31,7 +31,7 @@
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
-                android:text="站点广告详情"
+                android:text="修改密码"
                 android:textSize="@dimen/sp_18"
                 android:textColor="@color/color_333333"
                 android:textStyle="bold"
@@ -40,37 +40,37 @@
                 android:layout_height="wrap_content">
             </TextView>
         </RelativeLayout>
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/dp_17"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_below="@id/rl_top"
             android:id="@+id/l1"
-            android:gravity="center"
             android:orientation="horizontal"
             android:layout_height="@dimen/dp_38">
             <TextView
                 android:layout_width="wrap_content"
                 android:text="旧密码"
                 android:textSize="@dimen/sp_15"
+                android:layout_centerVertical="true"
                 android:textColor="@color/color_333333"
                 android:layout_height="wrap_content">
             </TextView>
             <EditText
                 android:layout_width="match_parent"
-                android:layout_below="@id/back"
                 android:textSize="@dimen/sp_12"
                 android:hint="请输入您的密码"
                 android:background="@null"
+                android:layout_centerVertical="true"
                 android:id="@+id/et_old_pwd"
                 android:inputType="textPassword"
                 android:textColor="@color/color_999999"
                 android:textColorHint="@color/color_999999"
                 android:layout_marginRight="@dimen/dp_15"
-                android:layout_marginLeft="@dimen/dp_41"
+                android:layout_marginLeft="@dimen/dp_80"
                 android:layout_height="wrap_content">
             </EditText>
-        </LinearLayout>
+        </RelativeLayout>
         <View
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
@@ -80,36 +80,36 @@
             android:layout_below="@id/l1"
             android:layout_height="@dimen/dp_1">
         </View>
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_below="@id/v1"
             android:id="@+id/l2"
-            android:gravity="center"
             android:orientation="horizontal"
             android:layout_height="@dimen/dp_38">
             <TextView
                 android:layout_width="wrap_content"
                 android:text="新密码"
                 android:textSize="@dimen/sp_15"
+                android:layout_centerVertical="true"
                 android:textColor="@color/color_333333"
                 android:layout_height="wrap_content">
             </TextView>
             <EditText
                 android:layout_width="match_parent"
-                android:layout_below="@id/back"
                 android:textSize="@dimen/sp_12"
                 android:hint="请输入新密码"
                 android:background="@null"
+                android:layout_centerVertical="true"
                 android:id="@+id/et_new_pwd"
                 android:inputType="textPassword"
                 android:textColor="@color/color_999999"
                 android:textColorHint="@color/color_999999"
                 android:layout_marginRight="@dimen/dp_15"
-                android:layout_marginLeft="@dimen/dp_41"
+                android:layout_marginLeft="@dimen/dp_80"
                 android:layout_height="wrap_content">
             </EditText>
-        </LinearLayout>
+        </RelativeLayout>
         <View
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
@@ -119,25 +119,25 @@
             android:layout_below="@id/l2"
             android:layout_height="@dimen/dp_1">
         </View>
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_below="@id/v2"
             android:id="@+id/l3"
-            android:gravity="center"
             android:orientation="horizontal"
             android:layout_height="@dimen/dp_38">
             <TextView
                 android:layout_width="wrap_content"
                 android:text="确认密码"
                 android:textSize="@dimen/sp_15"
+                android:layout_centerVertical="true"
                 android:textColor="@color/color_333333"
                 android:layout_height="wrap_content">
             </TextView>
             <EditText
                 android:layout_width="match_parent"
-                android:layout_below="@id/back"
                 android:textSize="@dimen/sp_12"
+                android:layout_centerVertical="true"
                 android:hint="重复输入新密码"
                 android:id="@+id/et_new_pwd2"
                 android:inputType="textPassword"
@@ -145,10 +145,10 @@
                 android:textColor="@color/color_999999"
                 android:textColorHint="@color/color_999999"
                 android:layout_marginRight="@dimen/dp_15"
-                android:layout_marginLeft="@dimen/dp_26"
+                android:layout_marginLeft="@dimen/dp_80"
                 android:layout_height="wrap_content">
             </EditText>
-        </LinearLayout>
+        </RelativeLayout>
         <View
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"

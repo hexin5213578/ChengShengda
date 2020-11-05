@@ -31,13 +31,13 @@
     </style>
 
     <style name="TabLayoutTextSelected">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/color_0BA4E9</item>
     </style>
 
     <style name="TabLayoutTextUnSelected">
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/color_999999</item>
     </style>
