@@ -388,8 +388,6 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             // 在定位结束后，在合适的生命周期调用onDestroy()方法
             // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
             mlocationClient.startLocation();//启动定位
-
-
         }
     }
 
@@ -575,6 +573,42 @@ public class FragmentMain extends Fragment implements DistrictSearch.OnDistrictS
             EventBus.getDefault().register(this);
         }
         Log.e("xxx","onResume()");
+
+        // TODO: 2020/10/31 0031  获取所有站点信息
+        NetUtils.getInstance().getApis().getAllStation()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<AllStationBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(AllStationBean allStationBean) {
+                        loading_view.dismiss();
+                        if(allStationBean.getType().equals("OK")){
+                            List<AllStationBean.ObjectBean> object = allStationBean.getObject();
+                            if(object.size()>0 && object!=null){
+                                for (int i =0;i<object.size();i++){
+                                    AllStationBean.ObjectBean objectBean = object.get(i);
+                                    DrawPoint(objectBean.getLat(),objectBean.getLng(),objectBean.getStatus(),Integer.valueOf(objectBean.getStationNum()),objectBean.getStationArea());
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        loading_view.dismiss();
+                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
