@@ -63,7 +63,7 @@ public class ExamOrderAdapte extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }else{
             String[] split = stationImg.split(",");
             if(split.length>0 && split!=null){
-                Glide.with(context).load(split[0]).into(((ViewHolder)holder).ivImg);
+                Glide.with(context).load("http://81.71.121.177:8081/station/getImage?head="+split[0]).into(((ViewHolder)holder).ivImg);
             }
         }
         ((ViewHolder)holder).tvLeasedTime.setText("租赁至"+listBean.getEndTime());

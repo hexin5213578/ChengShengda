@@ -164,11 +164,6 @@
         </activity>
 
         <!-- 站点详情 -->
-        <activity
-            android:name=".welcome.DemoAcitivity"
-            android:screenOrientation="portrait">
-
-        </activity>
     </application>
 
 </manifest>

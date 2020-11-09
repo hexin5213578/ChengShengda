@@ -62,7 +62,7 @@ public class ShopCarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         }else{
             String[] split = stationImg.split(",");
-            Glide.with(context).load(split[0]).into(((ViewHolder)holder).ivImg);
+            Glide.with(context).load("http://81.71.121.177:8081/station/getImage?head="+split[0]).into(((ViewHolder)holder).ivImg);
         }
         //根据 bean 类中的是否选中，更改checkBox状态
         ((ViewHolder)holder).rbChecked.setChecked(listBean.isPersonChecked());

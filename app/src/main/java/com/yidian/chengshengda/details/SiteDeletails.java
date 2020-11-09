@@ -164,8 +164,6 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                     //如果图片为空
                                     List<Integer> imgList1 = new ArrayList<>();
                                     imgList1.add(R.mipmap.welcome);
-                                    imgList1.add(R.mipmap.welcome);
-                                    imgList1.add(R.mipmap.location);
                                     //xbn设置
                                     xbn.setIndicatorGravity(BannerConfig.CENTER);
                                     xbn.setImageLoader(loader);
@@ -180,7 +178,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
                                     if (split.length > 0 && split != null) {
                                         Log.e("xxx", "图片数组长度为" + split.length);
                                         for (int i = 0; i < split.length; i++) {
-                                            imgList.add(split[i]);
+                                            imgList.add("http://81.71.121.177:8081/station/getImage?head="+split[i]);
                                         }
                                         if (imgList.size() > 0 && imgList != null) {
                                             //轮播图设置数据
@@ -333,7 +331,7 @@ public class SiteDeletails extends BaseAvtivity implements View.OnClickListener 
 
             split = stationImg.split(",");
             if (split.length > 0 && split != null) {
-                Glide.with(this).load(split[0]).into(img);
+                Glide.with(this).load("http://81.71.121.177:8081/station/getImage?head="+split[0]).into(img);
             }
         }
         tv_distance.setText(place);

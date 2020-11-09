@@ -2,6 +2,7 @@ package com.yidian.chengshengda.main.fragment.adv.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import com.yidian.chengshengda.R;
 import com.yidian.chengshengda.details.SiteDeletails;
 import com.yidian.chengshengda.custom.CustomRoundAngleImageView;
 import com.yidian.chengshengda.main.fragment.adv.bean.NosellSiteBean;
+import com.yidian.chengshengda.utils.NetUtils;
 import com.yidian.chengshengda.utils.SPUtil;
 import com.yidian.chengshengda.utils.StringUtil;
 
@@ -109,7 +111,7 @@ public class NoSellSitesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else {
             String[] split = stationImg.split(",");
 
-            Glide.with(context).load(split[0]).into(((ViewHolder)holder).ivImg);
+            Glide.with(context).load("http://81.71.121.177:8081/station/getImage?head=" + split[0]).into(((ViewHolder)holder).ivImg);
         }
 
         ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {

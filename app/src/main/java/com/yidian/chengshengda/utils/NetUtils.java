@@ -1,13 +1,23 @@
 package com.yidian.chengshengda.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
 
 import com.yidian.chengshengda.base.App;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetUtils {
     private Apis apis;
+    private StringBuffer baf;
 
     private NetUtils(){
         initOkHttp();
@@ -95,5 +106,25 @@ public class NetUtils {
         builder.addFormDataPart("licensePrint",files.get(1).getName(),RequestBody.create(MediaType.parse("image/jepg"),files.get(1)));
 
         return builder.build();
+    }
+    public StringBuffer getImg(String url){
+        try {
+            URL uri = new URL(url);//注意，这里的URL地址必须为网络地址，
+            //URL uri = new URL("http://localhost:8080/my/poem.txt");
+            //本地地址http://localhost:8080/my/poem.txt会报Connection Refused的异常
+            URLConnection ucon = uri.openConnection();
+            InputStream is = ucon.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            baf = new StringBuffer();
+            int current = 0;
+            while((current = bis.read()) != -1) {
+                baf.append(current);
+            }
+            //myString = EncodingUtils.getString(baf.toByteArray(), "GBK");
+            //myString = new String(baf.toByteArray());这个出现乱码，要在txt文件保存时选中utf-8
+        } catch(Exception e) {
+           String myString = e.getMessage();
+        }
+        return baf;
     }
 }

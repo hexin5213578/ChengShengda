@@ -51,7 +51,7 @@ public class HisLeaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }else {
             String[] split = stationImg.split(",");
-            Glide.with(context).load(split[0]).into(((ViewHolder)holder).ivImg);
+            Glide.with(context).load("http://81.71.121.177:8081/station/getImage?head="+split[0]).into(((ViewHolder)holder).ivImg);
         }
     }
 

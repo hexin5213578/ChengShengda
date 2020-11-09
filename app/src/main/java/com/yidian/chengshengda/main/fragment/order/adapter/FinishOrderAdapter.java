@@ -77,7 +77,7 @@ public class FinishOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else{
             String[] split = stationImg.split(",");
             if(split.length>0 && split!=null){
-                Glide.with(context).load(split[0]).into(((ViewHolder)holder).ivImg);
+                Glide.with(context).load("http://81.71.121.177:8081/station/getImage?head="+split[0]).into(((ViewHolder)holder).ivImg);
             }
         }
         ((ViewHolder)holder).tvDeleteorder.setOnClickListener(new View.OnClickListener() {
