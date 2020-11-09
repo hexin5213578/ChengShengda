@@ -17,10 +17,15 @@ import com.yidian.chengshengda.regist.bean.RegistBean;
 import com.yidian.chengshengda.setpwd.bean.SetPwdBean;
 import com.yidian.chengshengda.setup.bean.UserInfoBean;
 
+import java.io.File;
 import java.net.URL;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -96,8 +101,9 @@ public interface Apis {
     Observable<SetPwdBean> doSetPwd(@Query("userId") int userid,@Query("oldPassword")String oldPwd,@Query("password")String pwd);
 
     //修改用户头像
-    @GET("userInfo/updateUserInfo")
-    Observable<SetPwdBean> doSetHeadImg(@Query("id")int id,@Query("headImg")String headimg);
+    @POST()
+    //@Headers({"Content-Type:application/x-www-form-urlencoded;charset=UTF-8"})
+    Observable<SetPwdBean> doSetHeadImg(@Url String url,@Body RequestBody body);
 
     //修改用户昵称
     @GET("userInfo/updateUserInfo")

@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -54,16 +53,22 @@ import com.yidian.chengshengda.utils.SPUtil;
 
 import org.lym.image.select.PictureSelector;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class SetupActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.iv_headimg)
@@ -95,6 +100,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
     private String path;
     private PopupWindow mPopupWindow;
     private int id;
+    private File file;
 
     @Override
     protected int getResId() {
@@ -266,11 +272,21 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
                 //图片单选和多选数据都是以ArrayList的字符串数组返回的。
                 List<String> paths = PictureSelector.obtainPathResult(data);
                 path = paths.get(0);
-                Glide.with(this).load(path).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+                file = new File(path);
+
+                Glide.with(this).load(file).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivHeadimg);
+
+                ArrayList<File> list = new ArrayList<>();
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id",String.valueOf(id));
+                list.add(file);
+
+                RequestBody requsetBody = getRequsetBody(list, map);
+
 
                 // TODO: 2020/10/28 0028 上传到服务器
                 showDialog();
-                NetUtils.getInstance().getApis().doSetHeadImg(id,path)
+                NetUtils.getInstance().getApis().doSetHeadImg("http://192.168.10.100:8081/userInfo/updateUserInfoHead",requsetBody)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<SetPwdBean>() {
@@ -541,5 +557,20 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
             mPopupWindow.dismiss();
         }
     }
+    //xiangji
+    public RequestBody getRequsetBody(List<File> files, HashMap<String,String> map){
+//        if (map.size() < 1){
+//            return null;
+//        }
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
+        for (Map.Entry<String,String> entry:map.entrySet()){
+            Log.i("xxx","key = "+entry.getKey()+"value = "+entry.getValue());
+            builder.addFormDataPart(entry.getKey(),entry.getValue()+"");
+        }
+
+        builder.addFormDataPart("file",files.get(0).getName(),RequestBody.create(MediaType.parse("image/jepg"),files.get(0)));
+
+        return builder.build();
+    }
 }

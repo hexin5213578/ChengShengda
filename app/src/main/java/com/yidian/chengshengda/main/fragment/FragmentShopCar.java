@@ -187,103 +187,108 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
                         month = month + monthTime+",";
                     }
                 }
-                String str = idStr.substring(0,idStr.length()-1);
-                String monthstr = month.substring(0,idStr.length()-1);
-                showDialog();
-                NetUtils.getInstance().getApis()
-                        .doAddOrder(Integer.parseInt(userId),str,monthstr)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<SetPwdBean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
 
-                            }
+                if(idStr.equals("") && month.equals("")){
+                    Toast.makeText(getContext(), "请选择要购买的站点", Toast.LENGTH_SHORT).show();
+                }else{
+                    String str = idStr.substring(0,idStr.length()-1);
+                    String monthstr = month.substring(0,idStr.length()-1);
+                    showDialog();
+                    NetUtils.getInstance().getApis()
+                            .doAddOrder(Integer.parseInt(userId),str,monthstr)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<SetPwdBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
 
-                            @Override
-                            public void onNext(SetPwdBean setPwdBean) {
-                                hideDialog();
-                                if(setPwdBean.getType().equals("OK")){
-                                    Toast.makeText(getContext(), "订单提交成功", Toast.LENGTH_SHORT).show();
-
-                                    // TODO: 2020/10/31 0031 删除购物车里的数据
-                                    NetUtils.getInstance().getApis()
-                                            .deleteShopCar(Integer.parseInt(userId),str)
-                                            .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(new Observer<DeleteShopcarBean>() {
-                                                @Override
-                                                public void onSubscribe(Disposable d) {
-
-                                                }
-
-                                                @Override
-                                                public void onNext(DeleteShopcarBean deleteShopcarBean) {
-                                                    Toast.makeText(getContext(), ""+deleteShopcarBean.getMsg(), Toast.LENGTH_SHORT).show();
-                                                    if(deleteShopcarBean.getType().equals("OK")){
-                                                        //删除成功刷新页面
-                                                        getShopCarData(2,1,15);
-
-                                                        idStr = "";
-                                                        month = "";
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onError(Throwable e) {
-
-                                                }
-
-                                                @Override
-                                                public void onComplete() {
-
-                                                }
-                                            });
-                                    //弹出联系方式并创建订单
-                                    //添加成功后处理
-                                    mPopupWindow1 = new PopupWindow();
-                                    mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    mPopupWindow1.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_phone, null);
-
-                                    TextView tv_name = view.findViewById(R.id.tv_name);
-                                    TextView tv_number = view.findViewById(R.id.tv_number);
-                                    TextView tv_call = view.findViewById(R.id.tv_call);
-
-                                    tv_name.setText("冯坤");
-                                    tv_number.setText("15652578310");
-                                    tv_call.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            phone = tv_number.getText().toString();
-                                            callPhone(phone);
-                                        }
-                                    });
-                                    //popwindow设置属性
-                                    mPopupWindow1.setContentView(view);
-                                    mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
-                                    mPopupWindow1.setFocusable(true);
-                                    mPopupWindow1.setOutsideTouchable(true);
-                                    mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss() {
-                                            //setWindowAlpa(false);
-                                        }
-                                    });
-                                    show1(view);
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
+                                @Override
+                                public void onNext(SetPwdBean setPwdBean) {
+                                    hideDialog();
+                                    if(setPwdBean.getType().equals("OK")){
+                                        Toast.makeText(getContext(), "订单提交成功", Toast.LENGTH_SHORT).show();
 
-                            }
+                                        // TODO: 2020/10/31 0031 删除购物车里的数据
+                                        NetUtils.getInstance().getApis()
+                                                .deleteShopCar(Integer.parseInt(userId),str)
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(new Observer<DeleteShopcarBean>() {
+                                                    @Override
+                                                    public void onSubscribe(Disposable d) {
 
-                            @Override
-                            public void onComplete() {
+                                                    }
 
-                            }
-                        });
+                                                    @Override
+                                                    public void onNext(DeleteShopcarBean deleteShopcarBean) {
+                                                        Toast.makeText(getContext(), ""+deleteShopcarBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                                        if(deleteShopcarBean.getType().equals("OK")){
+                                                            //删除成功刷新页面
+                                                            getShopCarData(2,1,15);
+
+                                                            idStr = "";
+                                                            month = "";
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onError(Throwable e) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onComplete() {
+
+                                                    }
+                                                });
+                                        //弹出联系方式并创建订单
+                                        //添加成功后处理
+                                        mPopupWindow1 = new PopupWindow();
+                                        mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        mPopupWindow1.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_phone, null);
+
+                                        TextView tv_name = view.findViewById(R.id.tv_name);
+                                        TextView tv_number = view.findViewById(R.id.tv_number);
+                                        TextView tv_call = view.findViewById(R.id.tv_call);
+
+                                        tv_name.setText("冯坤");
+                                        tv_number.setText("15652578310");
+                                        tv_call.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                phone = tv_number.getText().toString();
+                                                callPhone(phone);
+                                            }
+                                        });
+                                        //popwindow设置属性
+                                        mPopupWindow1.setContentView(view);
+                                        mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
+                                        mPopupWindow1.setFocusable(true);
+                                        mPopupWindow1.setOutsideTouchable(true);
+                                        mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss() {
+                                                //setWindowAlpa(false);
+                                            }
+                                        });
+                                        show1(view);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
                 break;
             //删除购物车中数据
             case R.id.bt_delete:
@@ -293,37 +298,41 @@ public class FragmentShopCar extends BaseFragment implements View.OnClickListene
                         idStr = idStr + stationId+",";
                     }
                 }
-                String str1 = idStr.substring(0,idStr.length()-1);
-                Log.e("xxx",str1);
-                // TODO: 2020/10/31 0031 删除购物车里的数据
-                NetUtils.getInstance().getApis()
-                        .deleteShopCar(Integer.parseInt(userId),str1)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<DeleteShopcarBean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+                if(idStr.equals("")){
+                    Toast.makeText(getContext(), "请选择要删除的商品", Toast.LENGTH_SHORT).show();
+                }else{
+                    String str1 = idStr.substring(0,idStr.length()-1);
+                    Log.e("xxx",str1);
+                    // TODO: 2020/10/31 0031 删除购物车里的数据
+                    NetUtils.getInstance().getApis()
+                            .deleteShopCar(Integer.parseInt(userId),str1)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<DeleteShopcarBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
 
-                            }
-
-                            @Override
-                            public void onNext(DeleteShopcarBean deleteShopcarBean) {
-                                if(deleteShopcarBean.getType().equals("OK")){
-                                    //删除成功刷新页面
-                                    getShopCarData(2,1,15);
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
+                                @Override
+                                public void onNext(DeleteShopcarBean deleteShopcarBean) {
+                                    if(deleteShopcarBean.getType().equals("OK")){
+                                        //删除成功刷新页面
+                                        getShopCarData(2,1,15);
+                                    }
+                                }
 
-                            }
+                                @Override
+                                public void onError(Throwable e) {
 
-                            @Override
-                            public void onComplete() {
+                                }
 
-                            }
-                        });
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
                 break;
         }
     }
