@@ -412,9 +412,9 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                         SPUtil.getInstance().saveData(LoginActivity.this, SPUtil.FILE_NAME, SPUtil.IS_LOGIN, "0");
 
 
-                                        /*//将获取到的头像 网名 存入个人资料
+                                        //将获取到的头像 网名 存入个人资料
                                         NetUtils.getInstance().getApis()
-                                                .doSetHeadImg(loginBean.getObject().getId(),avatar)
+                                                .doSetWechatAndQQImg(loginBean.getObject().getId(),avatar)
                                                 .subscribeOn(Schedulers.io())
                                                 .observeOn(AndroidSchedulers.mainThread())
                                                 .subscribe(new Observer<SetPwdBean>() {
@@ -437,7 +437,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                                     public void onComplete() {
 
                                                     }
-                                                });*/
+                                                });
                                         NetUtils.getInstance().getApis().dosetNikeName(loginBean.getObject().getId(),nickName)
                                                 .subscribeOn(Schedulers.io())
                                                 .observeOn(AndroidSchedulers.mainThread())

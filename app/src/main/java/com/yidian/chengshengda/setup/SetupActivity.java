@@ -286,7 +286,7 @@ public class SetupActivity extends BaseAvtivity implements View.OnClickListener 
 
                 // TODO: 2020/10/28 0028 上传到服务器
                 showDialog();
-                NetUtils.getInstance().getApis().doSetHeadImg("http://192.168.10.100:8081/userInfo/updateUserInfoHead",requsetBody)
+                NetUtils.getInstance().getApis().doSetHeadImg("http://192.168.10.102:8081/userInfo/updateUserInfoHead",requsetBody)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<SetPwdBean>() {

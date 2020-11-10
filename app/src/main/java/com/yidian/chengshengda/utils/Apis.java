@@ -100,10 +100,14 @@ public interface Apis {
     @GET("userInfo/updatePassword")
     Observable<SetPwdBean> doSetPwd(@Query("userId") int userid,@Query("oldPassword")String oldPwd,@Query("password")String pwd);
 
-    //修改用户头像
+    //相册修改用户头像
     @POST()
-    //@Headers({"Content-Type:application/x-www-form-urlencoded;charset=UTF-8"})
     Observable<SetPwdBean> doSetHeadImg(@Url String url,@Body RequestBody body);
+
+    //上传微信QQ头像
+    @GET("userInfo/updateUserInfo")
+    Observable<SetPwdBean> doSetWechatAndQQImg(@Query("id") int id, @Query("headImg")String head);
+
 
     //修改用户昵称
     @GET("userInfo/updateUserInfo")
